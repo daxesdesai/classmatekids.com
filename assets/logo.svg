@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="50%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#ec4899"/>
+    </linearGradient>
+    <linearGradient id="bookGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fbbf24"/>
+      <stop offset="100%" style="stop-color:#f59e0b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded square -->
+  <rect x="20" y="20" width="472" height="472" rx="100" ry="100" fill="url(#bgGradient)"/>
+
+  <!-- Open book shape -->
+  <g transform="translate(256, 280)">
+    <!-- Left page -->
+    <path d="M-20,-80 Q-120,-90 -140,-40 L-140,60 Q-120,50 -20,60 Z" fill="white" opacity="0.95"/>
+    <!-- Right page -->
+    <path d="M20,-80 Q120,-90 140,-40 L140,60 Q120,50 20,60 Z" fill="white" opacity="0.95"/>
+    <!-- Book spine -->
+    <path d="M-20,-80 Q0,-70 20,-80 L20,60 Q0,70 -20,60 Z" fill="#f3f4f6"/>
+  </g>
+
+  <!-- Math symbols on left page -->
+  <g font-family="Arial, sans-serif" font-weight="bold">
+    <!-- Plus sign -->
+    <text x="145" y="230" font-size="36" fill="#6366f1">+</text>
+    <!-- Minus sign -->
+    <text x="175" y="280" font-size="36" fill="#ec4899">−</text>
+    <!-- Number -->
+    <text x="135" y="320" font-size="32" fill="#8b5cf6">7</text>
+  </g>
+
+  <!-- Math symbols on right page -->
+  <g font-family="Arial, sans-serif" font-weight="bold">
+    <!-- Multiply sign -->
+    <text x="335" y="230" font-size="36" fill="#10b981">×</text>
+    <!-- Divide sign -->
+    <text x="355" y="280" font-size="36" fill="#f59e0b">÷</text>
+    <!-- Number -->
+    <text x="345" y="320" font-size="32" fill="#3b82f6">9</text>
+  </g>
+
+  <!-- Equals sign in center -->
+  <text x="244" y="290" font-family="Arial, sans-serif" font-weight="bold" font-size="32" fill="#6366f1">=</text>
+
+  <!-- Floating math symbols around -->
+  <g font-family="Arial, sans-serif" font-weight="bold" opacity="0.9">
+    <!-- Top left -->
+    <circle cx="85" cy="100" r="28" fill="white" opacity="0.2"/>
+    <text x="73" y="112" font-size="32" fill="white">2</text>
+
+    <!-- Top right -->
+    <circle cx="427" cy="100" r="28" fill="white" opacity="0.2"/>
+    <text x="414" y="112" font-size="32" fill="white">+</text>
+
+    <!-- Bottom left -->
+    <circle cx="75" cy="400" r="24" fill="white" opacity="0.2"/>
+    <text x="63" y="412" font-size="28" fill="white">×</text>
+
+    <!-- Bottom right -->
+    <circle cx="437" cy="400" r="24" fill="white" opacity="0.2"/>
+    <text x="425" y="412" font-size="28" fill="white">5</text>
+
+    <!-- Extra floating elements -->
+    <circle cx="420" cy="240" r="20" fill="white" opacity="0.15"/>
+    <text x="410" y="250" font-size="24" fill="white">3</text>
+
+    <circle cx="92" cy="260" r="20" fill="white" opacity="0.15"/>
+    <text x="82" y="270" font-size="24" fill="white">÷</text>
+  </g>
+
+  <!-- Pencil accent -->
+  <g transform="translate(400, 160) rotate(45)">
+    <rect x="0" y="0" width="12" height="60" fill="#fbbf24" rx="2"/>
+    <polygon points="6,-12 0,0 12,0" fill="#fcd34d"/>
+    <rect x="0" y="50" width="12" height="10" fill="#ec4899" rx="1"/>
+  </g>
+</svg>

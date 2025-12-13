@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="50%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#ec4899"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded square -->
+  <rect x="0" y="0" width="1024" height="1024" rx="180" ry="180" fill="url(#bgGrad)"/>
+
+  <!-- Open book shape centered -->
+  <g transform="translate(512, 520)">
+    <!-- Left page -->
+    <path d="M-30,-160 Q-220,-180 -260,-80 L-260,120 Q-220,100 -30,120 Z" fill="white" opacity="0.95"/>
+    <!-- Right page -->
+    <path d="M30,-160 Q220,-180 260,-80 L260,120 Q220,100 30,120 Z" fill="white" opacity="0.95"/>
+    <!-- Book spine shadow -->
+    <path d="M-30,-160 Q0,-140 30,-160 L30,120 Q0,140 -30,120 Z" fill="#e5e7eb"/>
+  </g>
+
+  <!-- Math symbols on left page -->
+  <g font-family="Arial Rounded MT Bold, Arial, sans-serif" font-weight="bold">
+    <text x="290" y="420" font-size="72" fill="#6366f1">+</text>
+    <text x="340" y="520" font-size="72" fill="#ec4899">−</text>
+    <text x="280" y="600" font-size="64" fill="#8b5cf6">7</text>
+  </g>
+
+  <!-- Letters on right page -->
+  <g font-family="Arial Rounded MT Bold, Arial, sans-serif" font-weight="bold">
+    <text x="620" y="420" font-size="68" fill="#10b981">A</text>
+    <text x="680" y="520" font-size="68" fill="#f59e0b">B</text>
+    <text x="640" y="610" font-size="64" fill="#3b82f6">C</text>
+  </g>
+
+  <!-- Equals sign in center -->
+  <text x="476" y="540" font-family="Arial Rounded MT Bold, Arial, sans-serif" font-weight="bold" font-size="64" fill="#6366f1">=</text>
+
+  <!-- Floating math symbols and letters around the book -->
+  <g font-family="Arial Rounded MT Bold, Arial, sans-serif" font-weight="bold">
+    <!-- Top left - numbers -->
+    <circle cx="160" cy="180" r="55" fill="white" opacity="0.25"/>
+    <text x="135" y="200" font-size="64" fill="white">2</text>
+
+    <circle cx="300" cy="280" r="45" fill="white" opacity="0.2"/>
+    <text x="278" y="300" font-size="52" fill="white">+</text>
+
+    <!-- Top right - letters -->
+    <circle cx="864" cy="180" r="55" fill="white" opacity="0.25"/>
+    <text x="836" y="202" font-size="64" fill="white">Z</text>
+
+    <circle cx="724" cy="280" r="45" fill="white" opacity="0.2"/>
+    <text x="700" y="300" font-size="52" fill="white">X</text>
+
+    <!-- Bottom left - letters -->
+    <circle cx="140" cy="780" r="50" fill="white" opacity="0.2"/>
+    <text x="115" y="800" font-size="56" fill="white">D</text>
+
+    <circle cx="280" cy="860" r="45" fill="white" opacity="0.2"/>
+    <text x="256" y="880" font-size="52" fill="white">E</text>
+
+    <!-- Bottom right - math -->
+    <circle cx="884" cy="780" r="50" fill="white" opacity="0.2"/>
+    <text x="862" y="800" font-size="56" fill="white">5</text>
+
+    <circle cx="744" cy="860" r="45" fill="white" opacity="0.2"/>
+    <text x="722" y="880" font-size="52" fill="white">×</text>
+
+    <!-- Side accents - mixed -->
+    <circle cx="120" cy="480" r="40" fill="white" opacity="0.15"/>
+    <text x="98" y="498" font-size="46" fill="white">8</text>
+
+    <circle cx="904" cy="480" r="40" fill="white" opacity="0.15"/>
+    <text x="882" y="498" font-size="46" fill="white">F</text>
+
+    <!-- Extra floating elements -->
+    <circle cx="200" cy="650" r="35" fill="white" opacity="0.15"/>
+    <text x="180" y="666" font-size="40" fill="white">G</text>
+
+    <circle cx="824" cy="650" r="35" fill="white" opacity="0.15"/>
+    <text x="808" y="666" font-size="40" fill="white">3</text>
+  </g>
+
+  <!-- Pencil accent top right -->
+  <g transform="translate(780, 120) rotate(35)">
+    <rect x="0" y="0" width="24" height="100" fill="#fbbf24" rx="3"/>
+    <polygon points="12,-20 0,0 24,0" fill="#fcd34d"/>
+    <rect x="0" y="85" width="24" height="15" fill="#ec4899" rx="2"/>
+    <rect x="8" y="0" width="8" height="100" fill="#f59e0b" opacity="0.3"/>
+  </g>
+</svg>
