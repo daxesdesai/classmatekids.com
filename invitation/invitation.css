@@ -120,7 +120,7 @@ body {
 /* Party poster */
 .poster-container {
     margin: var(--spacing-lg) auto;
-    max-width: 650px;
+    max-width: 100%;
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
@@ -130,12 +130,6 @@ body {
     width: 100%;
     height: auto;
     display: block;
-}
-
-@media (max-width: 540px) {
-    .poster-container {
-        max-width: 90%;
-    }
 }
 
 .poster-placeholder {
