@@ -120,14 +120,8 @@ body {
 /* Party poster */
 .poster-container {
     margin: var(--spacing-lg) auto;
-    max-width: 500px;
-    background: linear-gradient(135deg, var(--zombie-gray), var(--zombie-dark));
-    border: 3px solid var(--zombie-green);
+    max-width: 100%;
     border-radius: var(--radius-lg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--neon-glow);
     overflow: hidden;
 }
 
