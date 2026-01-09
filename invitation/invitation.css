@@ -119,25 +119,16 @@ body {
 
 /* Party poster */
 .poster-container {
-    margin: var(--spacing-md) calc(-1 * var(--spacing-md));
-    max-width: none;
-    width: calc(100% + 2 * var(--spacing-md));
+    margin: var(--spacing-lg) auto;
+    max-width: 400px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
 }
 
 .poster-container img {
     width: 100%;
     height: auto;
     display: block;
-}
-
-@media (min-width: 768px) {
-    .poster-container {
-        margin: var(--spacing-lg) auto;
-        max-width: 600px;
-        width: 100%;
-        border-radius: var(--radius-lg);
-        overflow: hidden;
-    }
 }
 
 .poster-placeholder {
