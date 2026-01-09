@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sara's 8th Birthday Party!</title>
+    <meta name="description" content="You're invited to Sara's 8th Birthday Party - Zombies 4 Theme!">
+
+    <!-- Prevent search indexing for private invitation -->
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/appicon.png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="invitation.css">
+</head>
+<body>
+    <!-- Loading State -->
+    <div id="loading" class="loading">
+        <div class="container">
+            <div class="loading-spinner"></div>
+            <p>Loading your invitation...</p>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div id="error-container" class="error-container hidden">
+        <div class="container">
+            <div class="error-icon">😕</div>
+            <h1 id="error-title" class="error-title">Oops!</h1>
+            <p id="error-message" class="error-message">Something went wrong.</p>
+        </div>
+    </div>
+
+    <!-- Main Invitation Content -->
+    <div id="invitation-content" class="hidden">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <span class="hero-badge">You're Invited!</span>
+                <h1 class="hero-title">Sara's 8th Birthday!</h1>
+                <p class="hero-subtitle">Zombies 4 Theme</p>
+                <p class="hero-date">Sunday, February 1, 2026</p>
+            </div>
+
+            <!-- Poster Placeholder - Add your custom image later -->
+            <div class="poster-container">
+                <!-- Replace this with your custom poster image:
+                     <img src="your-poster.jpg" alt="Party Poster"> -->
+                <div class="poster-placeholder">
+                    <div style="font-size: 4rem;">🧟‍♀️🎉</div>
+                    <p>Party Poster<br>Coming Soon!</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <!-- Party Details -->
+            <section class="details-card">
+                <h2>📍 Party Details</h2>
+
+                <div class="detail-row">
+                    <div class="detail-icon">📅</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Date</div>
+                        <div class="detail-value">Sunday, February 1, 2026</div>
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-icon">⏰</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Time</div>
+                        <div class="detail-value">2:30 PM</div>
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-icon">📍</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Location</div>
+                        <div class="detail-value">
+                            <a href="https://maps.google.com/?q=7777+Edinger+Ave+Huntington+Beach+CA+92647" target="_blank" rel="noopener">
+                                Sky Zone Trampoline Park<br>
+                                7777 Edinger Ave<br>
+                                Huntington Beach, CA 92647
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-icon">🎬</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Theme</div>
+                        <div class="detail-value">Zombies 4 - Dress in green, pink, or zombie style!</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RSVP Section -->
+            <section class="rsvp-section">
+                <h2>💌 RSVP</h2>
+
+                <div class="guest-name-display">
+                    <div class="guest-name-label">Invitation for</div>
+                    <div id="guest-name" class="guest-name-value">Loading...</div>
+                </div>
+
+                <p id="rsvp-status" style="text-align: center; margin-bottom: 1rem; color: var(--zombie-green); display: none;"></p>
+
+                <div id="rsvp-form">
+                    <div class="rsvp-options">
+                        <div class="rsvp-option yes" data-value="yes">
+                            <div class="rsvp-option-icon">🎉</div>
+                            <div class="rsvp-option-label">Yes!</div>
+                        </div>
+                        <div class="rsvp-option no" data-value="no">
+                            <div class="rsvp-option-icon">😢</div>
+                            <div class="rsvp-option-label">Can't make it</div>
+                        </div>
+                        <div class="rsvp-option maybe" data-value="maybe">
+                            <div class="rsvp-option-icon">🤔</div>
+                            <div class="rsvp-option-label">Maybe</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="num-guests">Number of guests attending</label>
+                        <select id="num-guests">
+                            <option value="1">1 guest</option>
+                            <option value="2">2 guests</option>
+                            <option value="3">3 guests</option>
+                            <option value="4">4 guests</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guest-message">Message (optional)</label>
+                        <textarea id="guest-message" placeholder="Any dietary restrictions, questions, or just say hi!"></textarea>
+                    </div>
+
+                    <button id="submit-rsvp" class="btn-submit">Submit RSVP</button>
+                </div>
+
+                <!-- Success Message -->
+                <div id="success-message" class="success-message hidden">
+                    <div class="success-icon">🎊</div>
+                    <h3 class="success-title">RSVP Received!</h3>
+                    <p id="success-response">We can't wait to see you!</p>
+                    <p style="margin-top: 1rem; opacity: 0.7;">You can close this page or leave a birthday message below.</p>
+                </div>
+            </section>
+
+            <!-- Birthday Message Section -->
+            <section class="message-section">
+                <h2>💜 Leave a Birthday Message for Sara</h2>
+                <div class="form-group">
+                    <textarea id="birthday-message" placeholder="Write a special birthday message for Sara..."></textarea>
+                </div>
+                <button id="submit-message" class="btn-submit" style="background: linear-gradient(135deg, var(--zombie-pink), var(--zombie-purple));">Send Message</button>
+            </section>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <a href="https://classmatekids.com" target="_blank" rel="noopener" class="footer-promo">
+                    <img src="../assets/appicon.png" alt="ClassMate">
+                    <span>Invitation powered by ClassMate</span>
+                </a>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- Invitation Logic -->
+    <script src="invitation.js"></script>
+</body>
+</html>

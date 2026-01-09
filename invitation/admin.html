@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Sara's Birthday Party</title>
+
+    <!-- Prevent search indexing -->
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/appicon.png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="invitation.css">
+</head>
+<body class="admin-page">
+    <!-- Loading State -->
+    <div id="loading" class="loading">
+        <div class="container">
+            <div class="loading-spinner"></div>
+            <p>Loading admin dashboard...</p>
+        </div>
+    </div>
+
+    <!-- Admin Content -->
+    <div id="admin-content" class="hidden">
+        <!-- Admin Header -->
+        <header class="admin-header">
+            <div class="container">
+                <h1>🎂 Sara's 8th Birthday - Admin Dashboard</h1>
+            </div>
+        </header>
+
+        <div class="container">
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div id="stat-total" class="stat-value">0</div>
+                    <div class="stat-label">Total Invites</div>
+                </div>
+                <div class="stat-card yes">
+                    <div id="stat-yes" class="stat-value">0</div>
+                    <div class="stat-label">Attending</div>
+                </div>
+                <div class="stat-card no">
+                    <div id="stat-no" class="stat-value">0</div>
+                    <div class="stat-label">Not Attending</div>
+                </div>
+                <div class="stat-card maybe">
+                    <div id="stat-maybe" class="stat-value">0</div>
+                    <div class="stat-label">Maybe</div>
+                </div>
+                <div class="stat-card pending">
+                    <div id="stat-pending" class="stat-value">0</div>
+                    <div class="stat-label">No Response</div>
+                </div>
+                <div class="stat-card yes">
+                    <div id="stat-guests" class="stat-value">0</div>
+                    <div class="stat-label">Total Guests</div>
+                </div>
+            </div>
+
+            <!-- Create New Invite -->
+            <section class="admin-section">
+                <h2>➕ Create New Invite</h2>
+                <div class="create-invite-form">
+                    <div class="form-group">
+                        <label for="new-guest-name">Guest/Family Name</label>
+                        <input type="text" id="new-guest-name" placeholder="e.g., Smith Family">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-max-guests">Max Guests</label>
+                        <select id="new-max-guests">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4" selected>4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+                    </div>
+                    <button id="create-invite-btn" class="btn-create">Create Invite</button>
+                </div>
+                <div class="invite-link-container hidden">
+                    <input type="text" id="new-invite-link" class="invite-link-input" readonly>
+                    <button id="copy-new-link" class="btn-copy">Copy</button>
+                </div>
+            </section>
+
+            <!-- Guest List -->
+            <section class="admin-section">
+                <h2>📋 Guest List</h2>
+                <div style="overflow-x: auto;">
+                    <table class="guest-table">
+                        <thead>
+                            <tr>
+                                <th>Guest Name</th>
+                                <th>Status</th>
+                                <th># Guests</th>
+                                <th>Max</th>
+                                <th>Message</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="guest-table-body">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Messages -->
+            <section class="admin-section">
+                <h2>💌 Birthday Messages for Sara</h2>
+                <div id="messages-list" class="messages-list">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Quick Reference -->
+            <section class="admin-section">
+                <h2>ℹ️ Quick Reference</h2>
+                <div class="detail-row">
+                    <div class="detail-icon">🔗</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Guest Invite URL Format</div>
+                        <div class="detail-value" style="font-family: monospace; font-size: 0.9rem;">
+                            classmatekids.com/invitation/?invite=INVITE_ID
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-icon">🔐</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Admin Access URL</div>
+                        <div class="detail-value" style="font-family: monospace; font-size: 0.9rem;">
+                            classmatekids.com/invitation/admin.html?admin=sara2026admin
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-icon">📅</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Party Details</div>
+                        <div class="detail-value">
+                            Sunday, Feb 1, 2026 @ 2:30 PM<br>
+                            Sky Zone, Huntington Beach
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <a href="index.html" class="footer-promo">
+                    ← Back to Invitation Preview
+                </a>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- Invitation Logic -->
+    <script src="invitation.js"></script>
+</body>
+</html>
