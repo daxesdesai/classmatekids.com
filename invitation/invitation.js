@@ -218,7 +218,7 @@ function setElementText(id, text) {
 }
 
 function generateInviteUrl(inviteId) {
-    const baseUrl = window.location.origin + window.location.pathname;
+    const baseUrl = window.location.origin + '/invitation/';
     return `${baseUrl}?invite=${inviteId}`;
 }
 
