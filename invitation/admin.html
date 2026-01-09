@@ -12,7 +12,7 @@
     <link rel="icon" type="image/png" href="../assets/appicon.png">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="invitation.css?v=2">
+    <link rel="stylesheet" href="invitation.css?v=3">
 </head>
 <body class="admin-page">
     <!-- Loading State -->
@@ -38,6 +38,10 @@
                 <div class="stat-card">
                     <div id="stat-total" class="stat-value">0</div>
                     <div class="stat-label">Total Invites</div>
+                </div>
+                <div class="stat-card" style="border: 1px solid var(--zombie-purple);">
+                    <div id="stat-viewed" class="stat-value" style="color: var(--zombie-purple);">0</div>
+                    <div class="stat-label">Viewed</div>
                 </div>
                 <div class="stat-card yes">
                     <div id="stat-yes" class="stat-value">0</div>
@@ -96,6 +100,7 @@
                         <thead>
                             <tr>
                                 <th>Guest Name</th>
+                                <th>Viewed</th>
                                 <th>Status</th>
                                 <th># Guests</th>
                                 <th>Max</th>
@@ -165,6 +170,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <!-- Invitation Logic -->
-    <script src="invitation.js?v=2"></script>
+    <script src="invitation.js?v=3"></script>
 </body>
 </html>

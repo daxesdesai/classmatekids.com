@@ -88,6 +88,31 @@ async function loadExistingRsvp(inviteId) {
     }
 }
 
+async function recordView(inviteId) {
+    if (!isFirebaseReady || !inviteId) return;
+
+    try {
+        await db.ref(`events/${EVENT_ID}/views/${inviteId}`).set({
+            viewedAt: firebase.database.ServerValue.TIMESTAMP,
+            viewCount: firebase.database.ServerValue.increment(1)
+        });
+    } catch (error) {
+        console.error('Error recording view:', error);
+    }
+}
+
+async function loadAllViews() {
+    if (!isFirebaseReady) return {};
+
+    try {
+        const snapshot = await db.ref(`events/${EVENT_ID}/views`).once('value');
+        return snapshot.val() || {};
+    } catch (error) {
+        console.error('Error loading views:', error);
+        return {};
+    }
+}
+
 async function submitRsvp(inviteId, rsvpData) {
     if (!isFirebaseReady || !inviteId) return false;
 
@@ -315,6 +340,9 @@ async function initGuestPage() {
     hideElement('loading');
     showElement('invitation-content');
 
+    // Record that this invite was viewed
+    recordView(inviteId);
+
     // Populate guest name
     setElementText('guest-name', invite.guestName);
 
@@ -508,14 +536,15 @@ async function initAdminPage() {
 }
 
 async function refreshAdminData() {
-    const [invites, rsvps, messages] = await Promise.all([
+    const [invites, rsvps, messages, views] = await Promise.all([
         loadAllInvites(),
         loadAllRsvps(),
-        loadAllMessages()
+        loadAllMessages(),
+        loadAllViews()
     ]);
 
-    renderAdminStats(invites, rsvps);
-    renderGuestTable(invites, rsvps);
+    renderAdminStats(invites, rsvps, views);
+    renderGuestTable(invites, rsvps, views);
     renderMessages(messages, invites);
 }
 
@@ -541,11 +570,12 @@ function loadDemoAdminData() {
     renderMessages(demoMessages, demoInvites);
 }
 
-function renderAdminStats(invites, rsvps) {
+function renderAdminStats(invites, rsvps, views) {
     const inviteIds = Object.keys(invites);
     const rsvpData = Object.values(rsvps);
 
     const totalInvites = inviteIds.length;
+    const viewedCount = Object.keys(views).length;
     const yesCount = rsvpData.filter(r => r.attending === 'yes').length;
     const noCount = rsvpData.filter(r => r.attending === 'no').length;
     const maybeCount = rsvpData.filter(r => r.attending === 'maybe').length;
@@ -555,6 +585,7 @@ function renderAdminStats(invites, rsvps) {
         .reduce((sum, r) => sum + (r.numGuests || 1), 0);
 
     setElementText('stat-total', totalInvites);
+    setElementText('stat-viewed', viewedCount);
     setElementText('stat-yes', yesCount);
     setElementText('stat-no', noCount);
     setElementText('stat-maybe', maybeCount);
@@ -562,7 +593,7 @@ function renderAdminStats(invites, rsvps) {
     setElementText('stat-guests', totalGuests);
 }
 
-function renderGuestTable(invites, rsvps) {
+function renderGuestTable(invites, rsvps, views) {
     const tbody = document.getElementById('guest-table-body');
     if (!tbody) return;
 
@@ -570,14 +601,18 @@ function renderGuestTable(invites, rsvps) {
 
     Object.entries(invites).forEach(([inviteId, invite]) => {
         const rsvp = rsvps[inviteId];
+        const view = views[inviteId];
         const row = document.createElement('tr');
 
         const status = rsvp ? rsvp.attending : 'pending';
         const statusClass = status;
         const statusText = status.charAt(0).toUpperCase() + status.slice(1);
+        const viewedText = view ? '👁 Viewed' : 'Not viewed';
+        const viewedStyle = view ? 'color: var(--zombie-green);' : 'color: rgba(255,255,255,0.4);';
 
         row.innerHTML = `
             <td>${invite.guestName}</td>
+            <td><span style="${viewedStyle} font-size: 0.8rem;">${viewedText}</span></td>
             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
             <td>${rsvp ? rsvp.numGuests : '-'}</td>
             <td>${invite.maxGuests}</td>
@@ -591,7 +626,7 @@ function renderGuestTable(invites, rsvps) {
     });
 
     if (Object.keys(invites).length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; opacity: 0.5;">No invites created yet</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; opacity: 0.5;">No invites created yet</td></tr>';
     }
 }
 
