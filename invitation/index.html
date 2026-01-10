@@ -103,6 +103,7 @@
                 <div class="guest-name-display">
                     <div class="guest-name-label">Invitation for</div>
                     <div id="guest-name" class="guest-name-value">Loading...</div>
+                    <div id="invited-count" class="guest-name-label" style="margin-top: 0.5rem; font-size: 1rem; color: var(--zombie-pink);"></div>
                 </div>
 
                 <p id="rsvp-status" style="text-align: center; margin-bottom: 1rem; color: var(--zombie-green); display: none;"></p>
@@ -124,12 +125,20 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="num-guests">Number of guests attending</label>
-                        <select id="num-guests">
-                            <option value="1">1 guest</option>
-                            <option value="2">2 guests</option>
-                            <option value="3">3 guests</option>
-                            <option value="4">4 guests</option>
+                        <label for="num-adults">Adults attending</label>
+                        <select id="num-adults">
+                            <option value="0">0 adults</option>
+                            <option value="1">1 adult</option>
+                            <option value="2">2 adults</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="num-kids">Kids attending</label>
+                        <select id="num-kids">
+                            <option value="0">0 kids</option>
+                            <option value="1">1 kid</option>
+                            <option value="2">2 kids</option>
                         </select>
                     </div>
 
@@ -174,6 +183,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <!-- Invitation Logic -->
-    <script src="invitation.js?v=3"></script>
+    <script src="invitation.js?v=4"></script>
 </body>
 </html>

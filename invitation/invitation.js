@@ -186,7 +186,7 @@ async function loadAllMessages() {
     }
 }
 
-async function createInvite(guestName, maxGuests) {
+async function createInvite(guestName, maxAdults, maxKids) {
     if (!isFirebaseReady || !guestName.trim()) return null;
 
     try {
@@ -199,7 +199,8 @@ async function createInvite(guestName, maxGuests) {
 
         await db.ref(`events/${EVENT_ID}/invites/${inviteId}`).set({
             guestName: guestName.trim(),
-            maxGuests: parseInt(maxGuests) || 4,
+            maxAdults: parseInt(maxAdults) || 2,
+            maxKids: parseInt(maxKids) || 0,
             createdAt: firebase.database.ServerValue.TIMESTAMP
         });
 
@@ -296,10 +297,14 @@ async function initGuestPage() {
         // Demo data
         if (inviteId) {
             setElementText('guest-name', 'Demo Guest');
-            populateGuestDropdown(4);
+            populateAdultsDropdown(2);
+            populateKidsDropdown(2);
+            showInvitedCount(2, 2);
         } else {
             setElementText('guest-name', 'Guest');
-            populateGuestDropdown(4);
+            populateAdultsDropdown(2);
+            populateKidsDropdown(2);
+            showInvitedCount(2, 2);
         }
         setupRsvpForm(inviteId || 'demo', 'Demo Guest');
         return;
@@ -346,8 +351,12 @@ async function initGuestPage() {
     // Populate guest name
     setElementText('guest-name', invite.guestName);
 
-    // Populate guest dropdown based on maxGuests
-    populateGuestDropdown(invite.maxGuests || 4);
+    // Populate dropdowns based on maxAdults and maxKids
+    const maxAdults = invite.maxAdults || 2;
+    const maxKids = invite.maxKids || 0;
+    populateAdultsDropdown(maxAdults);
+    populateKidsDropdown(maxKids);
+    showInvitedCount(maxAdults, maxKids);
 
     // If there's an existing RSVP, pre-fill the form
     if (existingRsvp) {
@@ -358,16 +367,47 @@ async function initGuestPage() {
     setupRsvpForm(inviteId, invite.guestName);
 }
 
-function populateGuestDropdown(maxGuests) {
-    const select = document.getElementById('num-guests');
+function populateAdultsDropdown(maxAdults) {
+    const select = document.getElementById('num-adults');
     if (!select) return;
 
     select.innerHTML = '';
-    for (let i = 1; i <= maxGuests; i++) {
+    for (let i = 0; i <= maxAdults; i++) {
         const option = document.createElement('option');
         option.value = i;
-        option.textContent = i === 1 ? '1 guest' : `${i} guests`;
+        option.textContent = i === 1 ? '1 adult' : `${i} adults`;
         select.appendChild(option);
+    }
+    // Default to max adults
+    select.value = maxAdults;
+}
+
+function populateKidsDropdown(maxKids) {
+    const select = document.getElementById('num-kids');
+    if (!select) return;
+
+    select.innerHTML = '';
+    for (let i = 0; i <= maxKids; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i === 1 ? '1 kid' : `${i} kids`;
+        select.appendChild(option);
+    }
+    // Default to max kids
+    select.value = maxKids;
+}
+
+function showInvitedCount(maxAdults, maxKids) {
+    const el = document.getElementById('invited-count');
+    if (!el) return;
+
+    const adultText = maxAdults === 1 ? '1 adult' : `${maxAdults} adults`;
+    const kidText = maxKids === 1 ? '1 kid' : `${maxKids} kids`;
+
+    if (maxKids === 0) {
+        el.textContent = `You're invited: ${adultText}`;
+    } else {
+        el.textContent = `You're invited: ${adultText}, ${kidText}`;
     }
 }
 
@@ -381,10 +421,16 @@ function prefillRsvpForm(rsvp) {
         }
     });
 
-    // Set number of guests
-    const numGuestsSelect = document.getElementById('num-guests');
-    if (numGuestsSelect && rsvp.numGuests) {
-        numGuestsSelect.value = rsvp.numGuests;
+    // Set number of adults
+    const numAdultsSelect = document.getElementById('num-adults');
+    if (numAdultsSelect && rsvp.numAdults !== undefined) {
+        numAdultsSelect.value = rsvp.numAdults;
+    }
+
+    // Set number of kids
+    const numKidsSelect = document.getElementById('num-kids');
+    if (numKidsSelect && rsvp.numKids !== undefined) {
+        numKidsSelect.value = rsvp.numKids;
     }
 
     // Show confirmation that RSVP was already submitted
@@ -420,7 +466,8 @@ function setupRsvpForm(inviteId, guestName) {
                 return;
             }
 
-            const numGuests = document.getElementById('num-guests')?.value || 1;
+            const numAdults = document.getElementById('num-adults')?.value || 0;
+            const numKids = document.getElementById('num-kids')?.value || 0;
             const message = document.getElementById('guest-message')?.value || '';
 
             submitBtn.disabled = true;
@@ -428,7 +475,8 @@ function setupRsvpForm(inviteId, guestName) {
 
             const rsvpData = {
                 attending: selectedOption,
-                numGuests: parseInt(numGuests),
+                numAdults: parseInt(numAdults),
+                numKids: parseInt(numKids),
                 message: message.trim()
             };
 
@@ -551,22 +599,27 @@ async function refreshAdminData() {
 function loadDemoAdminData() {
     // Demo data for testing without Firebase
     const demoInvites = {
-        'smith-family-abc123': { guestName: 'Smith Family', maxGuests: 4, createdAt: Date.now() },
-        'johnson-xyz789': { guestName: 'Johnson Family', maxGuests: 3, createdAt: Date.now() },
-        'davis-demo': { guestName: 'Davis Family', maxGuests: 2, createdAt: Date.now() }
+        'smith-family-abc123': { guestName: 'Smith Family', maxAdults: 2, maxKids: 2, createdAt: Date.now() },
+        'johnson-xyz789': { guestName: 'Johnson Family', maxAdults: 2, maxKids: 1, createdAt: Date.now() },
+        'davis-demo': { guestName: 'Davis Family', maxAdults: 2, maxKids: 0, createdAt: Date.now() }
     };
 
     const demoRsvps = {
-        'smith-family-abc123': { attending: 'yes', numGuests: 3, message: 'So excited!', updatedAt: Date.now() },
-        'johnson-xyz789': { attending: 'maybe', numGuests: 2, message: '', updatedAt: Date.now() }
+        'smith-family-abc123': { attending: 'yes', numAdults: 2, numKids: 1, message: 'So excited!', updatedAt: Date.now() },
+        'johnson-xyz789': { attending: 'maybe', numAdults: 1, numKids: 1, message: '', updatedAt: Date.now() }
+    };
+
+    const demoViews = {
+        'smith-family-abc123': { viewedAt: Date.now(), viewCount: 2 },
+        'johnson-xyz789': { viewedAt: Date.now(), viewCount: 1 }
     };
 
     const demoMessages = {
         'msg1': { inviteId: 'smith-family-abc123', guestName: 'Smith Family', text: 'Happy birthday Sara!', createdAt: Date.now() }
     };
 
-    renderAdminStats(demoInvites, demoRsvps);
-    renderGuestTable(demoInvites, demoRsvps);
+    renderAdminStats(demoInvites, demoRsvps, demoViews);
+    renderGuestTable(demoInvites, demoRsvps, demoViews);
     renderMessages(demoMessages, demoInvites);
 }
 
@@ -575,14 +628,19 @@ function renderAdminStats(invites, rsvps, views) {
     const rsvpData = Object.values(rsvps);
 
     const totalInvites = inviteIds.length;
-    const viewedCount = Object.keys(views).length;
+    const viewedCount = views ? Object.keys(views).length : 0;
     const yesCount = rsvpData.filter(r => r.attending === 'yes').length;
     const noCount = rsvpData.filter(r => r.attending === 'no').length;
     const maybeCount = rsvpData.filter(r => r.attending === 'maybe').length;
     const pendingCount = totalInvites - rsvpData.length;
-    const totalGuests = rsvpData
+
+    // Calculate total adults and kids from confirmed attendees
+    const totalAdults = rsvpData
         .filter(r => r.attending === 'yes')
-        .reduce((sum, r) => sum + (r.numGuests || 1), 0);
+        .reduce((sum, r) => sum + (r.numAdults || 0), 0);
+    const totalKids = rsvpData
+        .filter(r => r.attending === 'yes')
+        .reduce((sum, r) => sum + (r.numKids || 0), 0);
 
     setElementText('stat-total', totalInvites);
     setElementText('stat-viewed', viewedCount);
@@ -590,7 +648,8 @@ function renderAdminStats(invites, rsvps, views) {
     setElementText('stat-no', noCount);
     setElementText('stat-maybe', maybeCount);
     setElementText('stat-pending', pendingCount);
-    setElementText('stat-guests', totalGuests);
+    setElementText('stat-adults', totalAdults);
+    setElementText('stat-kids', totalKids);
 }
 
 function renderGuestTable(invites, rsvps, views) {
@@ -601,7 +660,7 @@ function renderGuestTable(invites, rsvps, views) {
 
     Object.entries(invites).forEach(([inviteId, invite]) => {
         const rsvp = rsvps[inviteId];
-        const view = views[inviteId];
+        const view = views ? views[inviteId] : null;
         const row = document.createElement('tr');
 
         const status = rsvp ? rsvp.attending : 'pending';
@@ -610,12 +669,18 @@ function renderGuestTable(invites, rsvps, views) {
         const viewedText = view ? '👁 Viewed' : 'Not viewed';
         const viewedStyle = view ? 'color: var(--zombie-green);' : 'color: rgba(255,255,255,0.4);';
 
+        // Format adults: attending/max (e.g., "2/2")
+        const maxAdults = invite.maxAdults || 2;
+        const maxKids = invite.maxKids || 0;
+        const adultsText = rsvp ? `${rsvp.numAdults || 0}/${maxAdults}` : `0/${maxAdults}`;
+        const kidsText = rsvp ? `${rsvp.numKids || 0}/${maxKids}` : `0/${maxKids}`;
+
         row.innerHTML = `
             <td>${invite.guestName}</td>
             <td><span style="${viewedStyle} font-size: 0.8rem;">${viewedText}</span></td>
             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-            <td>${rsvp ? rsvp.numGuests : '-'}</td>
-            <td>${invite.maxGuests}</td>
+            <td>${adultsText}</td>
+            <td>${kidsText}</td>
             <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${rsvp?.message || ''}">${rsvp?.message || '-'}</td>
             <td>
                 <button class="btn-copy" onclick="copyToClipboard('${generateInviteUrl(inviteId)}')" style="padding: 4px 8px; font-size: 0.75rem;">Copy Link</button>
@@ -672,11 +737,13 @@ function setupAdminForms() {
     if (createBtn) {
         createBtn.addEventListener('click', async () => {
             const nameInput = document.getElementById('new-guest-name');
-            const maxGuestsInput = document.getElementById('new-max-guests');
+            const maxAdultsInput = document.getElementById('new-max-adults');
+            const maxKidsInput = document.getElementById('new-max-kids');
             const linkDisplay = document.getElementById('new-invite-link');
 
             const guestName = nameInput?.value || '';
-            const maxGuests = maxGuestsInput?.value || 4;
+            const maxAdults = maxAdultsInput?.value || 2;
+            const maxKids = maxKidsInput?.value || 2;
 
             if (!guestName.trim()) {
                 alert('Please enter a guest name');
@@ -688,7 +755,7 @@ function setupAdminForms() {
 
             let inviteId;
             if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
-                inviteId = await createInvite(guestName, maxGuests);
+                inviteId = await createInvite(guestName, maxAdults, maxKids);
             } else {
                 // Demo mode
                 inviteId = guestName.toLowerCase().replace(/\s+/g, '-') + '-' + Math.random().toString(36).substring(2, 6);

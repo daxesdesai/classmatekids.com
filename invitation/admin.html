@@ -60,8 +60,12 @@
                     <div class="stat-label">No Response</div>
                 </div>
                 <div class="stat-card yes">
-                    <div id="stat-guests" class="stat-value">0</div>
-                    <div class="stat-label">Total Guests</div>
+                    <div id="stat-adults" class="stat-value">0</div>
+                    <div class="stat-label">Total Adults</div>
+                </div>
+                <div class="stat-card yes">
+                    <div id="stat-kids" class="stat-value">0</div>
+                    <div class="stat-label">Total Kids</div>
                 </div>
             </div>
 
@@ -74,12 +78,24 @@
                         <input type="text" id="new-guest-name" placeholder="e.g., Smith Family">
                     </div>
                     <div class="form-group">
-                        <label for="new-max-guests">Max Guests</label>
-                        <select id="new-max-guests">
+                        <label for="new-max-adults">Max Adults</label>
+                        <select id="new-max-adults">
                             <option value="1">1</option>
-                            <option value="2">2</option>
+                            <option value="2" selected>2</option>
                             <option value="3">3</option>
-                            <option value="4" selected>4</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-max-kids">Max Kids</label>
+                        <select id="new-max-kids">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2" selected>2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
                             <option value="5">5</option>
                             <option value="6">6</option>
                         </select>
@@ -102,8 +118,8 @@
                                 <th>Guest Name</th>
                                 <th>Viewed</th>
                                 <th>Status</th>
-                                <th># Guests</th>
-                                <th>Max</th>
+                                <th>Adults</th>
+                                <th>Kids</th>
                                 <th>Message</th>
                                 <th>Actions</th>
                             </tr>
@@ -170,6 +186,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <!-- Invitation Logic -->
-    <script src="invitation.js?v=3"></script>
+    <script src="invitation.js?v=4"></script>
 </body>
 </html>
