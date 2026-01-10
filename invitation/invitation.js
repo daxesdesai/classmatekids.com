@@ -186,7 +186,7 @@ async function loadAllMessages() {
     }
 }
 
-async function createInvite(guestName, maxAdults, maxKids) {
+async function createInvite(guestName, maxAdults, maxKids, showInvitedCount) {
     if (!isFirebaseReady || !guestName.trim()) return null;
 
     try {
@@ -201,6 +201,7 @@ async function createInvite(guestName, maxAdults, maxKids) {
             guestName: guestName.trim(),
             maxAdults: parseInt(maxAdults) || 2,
             maxKids: parseInt(maxKids) || 0,
+            showInvitedCount: showInvitedCount !== false,
             createdAt: firebase.database.ServerValue.TIMESTAMP
         });
 
@@ -354,9 +355,10 @@ async function initGuestPage() {
     // Populate dropdowns based on maxAdults and maxKids
     const maxAdults = invite.maxAdults || 2;
     const maxKids = invite.maxKids || 0;
+    const showCount = invite.showInvitedCount !== false;
     populateAdultsDropdown(maxAdults);
     populateKidsDropdown(maxKids);
-    showInvitedCount(maxAdults, maxKids);
+    showInvitedCount(maxAdults, maxKids, showCount);
 
     // If there's an existing RSVP, pre-fill the form
     if (existingRsvp) {
@@ -397,9 +399,15 @@ function populateKidsDropdown(maxKids) {
     select.value = maxKids;
 }
 
-function showInvitedCount(maxAdults, maxKids) {
+function showInvitedCount(maxAdults, maxKids, showCount) {
     const el = document.getElementById('invited-count');
     if (!el) return;
+
+    // If showCount is false, just show "You're invited!" with emoji
+    if (showCount === false) {
+        el.textContent = "You're invited! 🎉";
+        return;
+    }
 
     const adultText = maxAdults === 1 ? '1 adult' : `${maxAdults} adults`;
     const kidText = maxKids === 1 ? '1 kid' : `${maxKids} kids`;
@@ -739,11 +747,13 @@ function setupAdminForms() {
             const nameInput = document.getElementById('new-guest-name');
             const maxAdultsInput = document.getElementById('new-max-adults');
             const maxKidsInput = document.getElementById('new-max-kids');
+            const showCountInput = document.getElementById('new-show-count');
             const linkDisplay = document.getElementById('new-invite-link');
 
             const guestName = nameInput?.value || '';
             const maxAdults = maxAdultsInput?.value || 2;
             const maxKids = maxKidsInput?.value || 2;
+            const showInvitedCount = showCountInput?.checked !== false;
 
             if (!guestName.trim()) {
                 alert('Please enter a guest name');
@@ -755,7 +765,7 @@ function setupAdminForms() {
 
             let inviteId;
             if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
-                inviteId = await createInvite(guestName, maxAdults, maxKids);
+                inviteId = await createInvite(guestName, maxAdults, maxKids, showInvitedCount);
             } else {
                 // Demo mode
                 inviteId = guestName.toLowerCase().replace(/\s+/g, '-') + '-' + Math.random().toString(36).substring(2, 6);
