@@ -380,8 +380,8 @@ function populateAdultsDropdown(maxAdults) {
         option.textContent = i === 1 ? '1 adult' : `${i} adults`;
         select.appendChild(option);
     }
-    // Default to max adults
-    select.value = maxAdults;
+    // Default to 0 so guest must pick
+    select.value = 0;
 }
 
 function populateKidsDropdown(maxKids) {
@@ -395,8 +395,8 @@ function populateKidsDropdown(maxKids) {
         option.textContent = i === 1 ? '1 kid' : `${i} kids`;
         select.appendChild(option);
     }
-    // Default to max kids
-    select.value = maxKids;
+    // Default to 0 so guest must pick
+    select.value = 0;
 }
 
 function showInvitedCount(maxAdults, maxKids, showCount) {
@@ -474,9 +474,15 @@ function setupRsvpForm(inviteId, guestName) {
                 return;
             }
 
-            const numAdults = document.getElementById('num-adults')?.value || 0;
-            const numKids = document.getElementById('num-kids')?.value || 0;
+            const numAdults = parseInt(document.getElementById('num-adults')?.value) || 0;
+            const numKids = parseInt(document.getElementById('num-kids')?.value) || 0;
             const message = document.getElementById('guest-message')?.value || '';
+
+            // If attending, require at least 1 adult
+            if (selectedOption === 'yes' && numAdults === 0) {
+                alert('Please select how many adults will be attending');
+                return;
+            }
 
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting...';
