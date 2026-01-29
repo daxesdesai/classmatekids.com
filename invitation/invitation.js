@@ -154,7 +154,7 @@ async function loadRsvpClosed() {
     if (!isFirebaseReady) return false;
 
     try {
-        const snapshot = await db.ref(`events/${EVENT_ID}/settings/rsvpClosed`).once('value');
+        const snapshot = await db.ref(`events/${EVENT_ID}/invites/_settings/rsvpClosed`).once('value');
         return snapshot.val() === true;
     } catch (error) {
         console.error('Error loading RSVP status:', error);
@@ -166,7 +166,7 @@ async function toggleRsvpStatus(currentlyClosed) {
     if (!isFirebaseReady) return false;
 
     try {
-        await db.ref(`events/${EVENT_ID}/settings/rsvpClosed`).set(!currentlyClosed);
+        await db.ref(`events/${EVENT_ID}/invites/_settings/rsvpClosed`).set(!currentlyClosed);
         return true;
     } catch (error) {
         console.error('Error toggling RSVP status:', error);
@@ -183,7 +183,9 @@ async function loadAllInvites() {
 
     try {
         const snapshot = await db.ref(`events/${EVENT_ID}/invites`).once('value');
-        return snapshot.val() || {};
+        const data = snapshot.val() || {};
+        delete data._settings;
+        return data;
     } catch (error) {
         console.error('Error loading invites:', error);
         return {};
@@ -788,7 +790,7 @@ function setupRealtimeListeners() {
     db.ref(`events/${EVENT_ID}/views`).on('value', () => refreshAdminData());
 
     // Listen for RSVP toggle changes
-    db.ref(`events/${EVENT_ID}/settings/rsvpClosed`).on('value', () => refreshRsvpToggle());
+    db.ref(`events/${EVENT_ID}/invites/_settings/rsvpClosed`).on('value', () => refreshRsvpToggle());
 }
 
 function setupAdminForms() {
