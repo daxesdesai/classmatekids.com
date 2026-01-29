@@ -147,6 +147,34 @@ async function submitMessage(inviteId, guestName, messageText) {
 }
 
 // ============================================
+// RSVP STATUS (OPEN/CLOSED)
+// ============================================
+
+async function loadRsvpClosed() {
+    if (!isFirebaseReady) return false;
+
+    try {
+        const snapshot = await db.ref(`events/${EVENT_ID}/settings/rsvpClosed`).once('value');
+        return snapshot.val() === true;
+    } catch (error) {
+        console.error('Error loading RSVP status:', error);
+        return false;
+    }
+}
+
+async function toggleRsvpStatus(currentlyClosed) {
+    if (!isFirebaseReady) return false;
+
+    try {
+        await db.ref(`events/${EVENT_ID}/settings/rsvpClosed`).set(!currentlyClosed);
+        return true;
+    } catch (error) {
+        console.error('Error toggling RSVP status:', error);
+        return false;
+    }
+}
+
+// ============================================
 // ADMIN PAGE FUNCTIONS
 // ============================================
 
@@ -339,8 +367,11 @@ async function initGuestPage() {
         return;
     }
 
-    // Load existing RSVP if any
-    const existingRsvp = await loadExistingRsvp(inviteId);
+    // Load existing RSVP and RSVP closed status in parallel
+    const [existingRsvp, rsvpClosed] = await Promise.all([
+        loadExistingRsvp(inviteId),
+        loadRsvpClosed()
+    ]);
 
     // Hide loading, show content
     hideElement('loading');
@@ -359,6 +390,13 @@ async function initGuestPage() {
     populateAdultsDropdown(maxAdults);
     populateKidsDropdown(maxKids);
     showInvitedCount(maxAdults, maxKids, showCount);
+
+    // Check if RSVP is closed and guest is NOT a confirmed "yes"
+    if (rsvpClosed && (!existingRsvp || existingRsvp.attending !== 'yes')) {
+        hideElement('rsvp-form');
+        showElement('rsvp-closed-message');
+        return;
+    }
 
     // If there's an existing RSVP, pre-fill the form
     if (existingRsvp) {
@@ -584,8 +622,11 @@ async function initAdminPage() {
         return;
     }
 
-    // Load all data
-    await refreshAdminData();
+    // Load all data and RSVP status
+    await Promise.all([
+        refreshAdminData(),
+        refreshRsvpToggle()
+    ]);
 
     hideElement('loading');
     showElement('admin-content');
@@ -595,6 +636,7 @@ async function initAdminPage() {
 
     // Setup forms
     setupAdminForms();
+    setupRsvpToggle();
 }
 
 async function refreshAdminData() {
@@ -739,10 +781,14 @@ function renderMessages(messages, invites) {
 function setupRealtimeListeners() {
     if (!isFirebaseReady) return;
 
-    // Listen for changes to refresh data
-    db.ref(`events/${EVENT_ID}`).on('value', () => {
-        refreshAdminData();
-    });
+    // Listen for invite/RSVP/message changes
+    db.ref(`events/${EVENT_ID}/invites`).on('value', () => refreshAdminData());
+    db.ref(`events/${EVENT_ID}/rsvps`).on('value', () => refreshAdminData());
+    db.ref(`events/${EVENT_ID}/messages`).on('value', () => refreshAdminData());
+    db.ref(`events/${EVENT_ID}/views`).on('value', () => refreshAdminData());
+
+    // Listen for RSVP toggle changes
+    db.ref(`events/${EVENT_ID}/settings/rsvpClosed`).on('value', () => refreshRsvpToggle());
 }
 
 function setupAdminForms() {
@@ -808,6 +854,56 @@ function setupAdminForms() {
             }
         });
     }
+}
+
+// ============================================
+// ADMIN RSVP TOGGLE
+// ============================================
+
+let currentRsvpClosed = false;
+
+async function refreshRsvpToggle() {
+    currentRsvpClosed = await loadRsvpClosed();
+    renderRsvpToggle();
+}
+
+function renderRsvpToggle() {
+    const statusText = document.getElementById('rsvp-status-text');
+    const toggleBtn = document.getElementById('toggle-rsvp-btn');
+    if (!statusText || !toggleBtn) return;
+
+    if (currentRsvpClosed) {
+        statusText.textContent = 'RSVPs are currently closed. Only guests who responded "Yes" can update.';
+        statusText.style.color = 'var(--zombie-pink)';
+        toggleBtn.textContent = 'Reopen RSVPs';
+        toggleBtn.className = 'btn-toggle-rsvp closed';
+    } else {
+        statusText.textContent = 'RSVPs are currently open. All guests can respond.';
+        statusText.style.color = 'var(--zombie-green)';
+        toggleBtn.textContent = 'Close RSVPs';
+        toggleBtn.className = 'btn-toggle-rsvp open';
+    }
+    toggleBtn.disabled = false;
+}
+
+function setupRsvpToggle() {
+    const toggleBtn = document.getElementById('toggle-rsvp-btn');
+    if (!toggleBtn) return;
+
+    toggleBtn.addEventListener('click', async () => {
+        toggleBtn.disabled = true;
+        toggleBtn.textContent = 'Updating...';
+
+        const success = await toggleRsvpStatus(currentRsvpClosed);
+        if (success) {
+            currentRsvpClosed = !currentRsvpClosed;
+            renderRsvpToggle();
+        } else {
+            alert('Failed to update RSVP status. Please try again.');
+            toggleBtn.disabled = false;
+            renderRsvpToggle();
+        }
+    });
 }
 
 // ============================================
