@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Chapter 1 Lesson 6 - Study Flashcards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4a148c 0%, #7b1fa2 50%, #ab47bc 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 120px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 1.6em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .score-item {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-size: 0.95em;
+        }
+
+        .score-item.correct { color: #27ae60; border: 3px solid #27ae60; }
+        .score-item.wrong { color: #e74c3c; border: 3px solid #e74c3c; }
+        .score-item.total { color: #6a1b9a; border: 3px solid #6a1b9a; }
+
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid white;
+            background: transparent;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: white;
+            color: #6a1b9a;
+        }
+
+        .flashcard-container {
+            perspective: 1000px;
+            max-width: 500px;
+            margin: 0 auto 20px;
+        }
+
+        .flashcard {
+            position: relative;
+            width: 100%;
+            min-height: 280px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            min-height: 280px;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #ffffff, #f3e5f5);
+            border: 3px solid #6a1b9a;
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #e1bee7, #ce93d8);
+            border: 3px solid #7b1fa2;
+            transform: rotateY(180deg);
+        }
+
+        .card-category {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+
+        .cat-people { background: #e8f5e9; color: #2e7d32; }
+        .cat-vocab { background: #e3f2fd; color: #1565c0; }
+        .cat-resources { background: #fff3e0; color: #ef6c00; }
+        .cat-culture { background: #fce4ec; color: #c2185b; }
+        .cat-geography { background: #f3e5f5; color: #7b1fa2; }
+
+        .card-number {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 0.8em;
+            color: #999;
+            font-weight: bold;
+        }
+
+        .card-front h3 {
+            font-size: 1.2em;
+            color: #333;
+            line-height: 1.5;
+            margin-top: 15px;
+        }
+
+        .card-front .tap-hint {
+            position: absolute;
+            bottom: 12px;
+            font-size: 0.8em;
+            color: #aaa;
+        }
+
+        .card-back p {
+            font-size: 1.1em;
+            color: #4a148c;
+            line-height: 1.6;
+        }
+
+        .card-back .fun-fact {
+            margin-top: 12px;
+            padding: 10px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #6a1b9a;
+        }
+
+        .nav-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn.prev, .nav-btn.next {
+            background: white;
+            color: #6a1b9a;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:hover { transform: scale(1.1); }
+        .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+        .know-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .know-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .know-btn.yes { background: #27ae60; }
+        .know-btn.no { background: #e74c3c; }
+        .know-btn.shuffle { background: #6a1b9a; }
+        .know-btn:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+
+        .voice-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 15px;
+            background: rgba(255,255,255,0.3);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85em;
+            color: white;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .voice-btn:hover { background: rgba(255,255,255,0.5); }
+
+        .progress-text {
+            text-align: center;
+            color: white;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .emoji-burst {
+            position: fixed;
+            font-size: 2em;
+            pointer-events: none;
+            animation: float-up 1s ease-out forwards;
+            z-index: 999;
+        }
+
+        @keyframes float-up {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-100px) scale(1.5); }
+        }
+
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.3em; }
+            .card-front h3 { font-size: 1.05em; }
+            .card-back p { font-size: 1em; }
+            .card-face { min-height: 250px; padding: 20px; }
+            .flashcard { min-height: 250px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Chapter 1, Lesson 6 - Flashcards</h1>
+        <p>Northwest and Northeast Peoples of California</p>
+        <p style="font-size:0.85em; margin-top:5px;">Yurok & Modoc Tribes</p>
+    </div>
+
+    <div class="score-board">
+        <div class="score-item correct">Know It: <span id="know-count">0</span></div>
+        <div class="score-item wrong">Still Learning: <span id="learning-count">0</span></div>
+        <div class="score-item total">Cards: <span id="current-card">1</span>/<span id="total-cards">30</span></div>
+    </div>
+
+    <div class="category-filter">
+        <button class="filter-btn active" onclick="filterCards('all')">All</button>
+        <button class="filter-btn" onclick="filterCards('people')">People</button>
+        <button class="filter-btn" onclick="filterCards('vocab')">Vocabulary</button>
+        <button class="filter-btn" onclick="filterCards('resources')">Resources</button>
+        <button class="filter-btn" onclick="filterCards('culture')">Culture</button>
+        <button class="filter-btn" onclick="filterCards('geography')">Geography</button>
+    </div>
+
+    <div style="text-align:center;">
+        <button class="voice-btn" onclick="speakCard()">Read Aloud</button>
+    </div>
+
+    <div class="flashcard-container" id="flashcard-container">
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+            <div class="card-face card-front" id="card-front"></div>
+            <div class="card-face card-back" id="card-back"></div>
+        </div>
+    </div>
+
+    <div class="nav-controls">
+        <button class="nav-btn prev" id="prev-btn" onclick="prevCard()">&#8592;</button>
+        <span style="color: white; font-weight: bold;" id="card-counter">1 / 30</span>
+        <button class="nav-btn next" id="next-btn" onclick="nextCard()">&#8594;</button>
+    </div>
+
+    <div class="know-buttons">
+        <button class="know-btn no" onclick="markCard(false)">Still Learning</button>
+        <button class="know-btn yes" onclick="markCard(true)">I Know This!</button>
+        <button class="know-btn shuffle" onclick="shuffleAndRestart()">Shuffle</button>
+    </div>
+
+    <div class="progress-text" id="progress-text">Tap a card to flip it!</div>
+
+    <script>
+        const allCards = [
+            // === GEOGRAPHY ===
+            {
+                category: "geography",
+                front: "Where is the Northwest culture area of California?",
+                back: "It is bordered by the Pacific Ocean to the west and the Cascade Mountains to the east. It has a moist, wet climate with rivers that lead to the Pacific Ocean.",
+                funFact: "The Klamath River flows over 260 miles from Oregon to the Pacific Ocean!"
+            },
+            {
+                category: "geography",
+                front: "Where is the Northeast culture area of California?",
+                back: "It includes parts of the Cascades and the Modoc Plateau. It was formed by volcanoes and has fewer major rivers but many shallow lakes.",
+                funFact: "The Modoc Plateau was formed by volcanic activity!"
+            },
+            {
+                category: "geography",
+                front: "What is a temperate rain forest?",
+                back: "A rain forest found in cooler places that are not too hot or too cold. Northern California is part of the Temperate Rain Forests region.",
+                funFact: "Many people think rain forests are only in hot, tropical areas like South America — but California has them too!"
+            },
+            {
+                category: "geography",
+                front: "What is the Klamath River and why is it important?",
+                back: "It starts at Klamath Lake in Oregon and flows over 260 miles to the Pacific Ocean through deep gorges and valleys with mountains on either side. It was critical for salmon fishing.",
+                funFact: "The Klamath is the second-longest river in California!"
+            },
+            {
+                category: "geography",
+                front: "What is the Modoc Plateau?",
+                back: "A high, flat area in northeast California. It has forests that the early peoples used for fuel, food, and shelter. Big game like bears, elk, and deer were plentiful for hunting.",
+                funFact: "The plateau was formed by ancient volcanic activity!"
+            },
+
+            // === PEOPLE - NORTHWEST ===
+            {
+                category: "people",
+                front: "Which peoples lived in the Northwest culture area?",
+                back: "The Tolowa, the Yurok, the Wiyot, the Whilkut, the Karuk, the Chaula, the Hupa, and the Shasta.",
+                funFact: "About 10 mid-size groups of people in Northwest and Northeast California grew and did well before Europeans arrived."
+            },
+            {
+                category: "people",
+                front: "Where did the Yurok people live?",
+                back: "The Yurok lived along the Klamath River and Pacific Coast for thousands of years. They lived in harmony with nature and the forests.",
+                funFact: "The Yurok are one of the largest Native American tribes in California today!"
+            },
+            {
+                category: "people",
+                front: "Which peoples lived in the Northeast culture area?",
+                back: "The Modoc, the Achumawi, and the Atsugewi.",
+                funFact: "Early peoples in the Northeast used the Modoc Plateau forests for fuel, food, and shelter."
+            },
+            {
+                category: "people",
+                front: "Where did the Modoc people live?",
+                back: "The Modoc lived on the plateau, a high flat area of northeast California. They moved around with the seasons and did not stay in one place year-round.",
+                funFact: "The Modoc had both permanent villages and temporary camps!"
+            },
+
+            // === RESOURCES ===
+            {
+                category: "resources",
+                front: "What are giant redwoods and why are they special?",
+                back: "Giant redwoods are the tallest trees in the world, reaching heights of 365 feet. They can live and grow for over 2,000 years! They grow in Northern California's forests.",
+                funFact: "A giant redwood is about 379 feet tall — taller than the Statue of Liberty (305 ft)!"
+            },
+            {
+                category: "resources",
+                front: "How do giant redwoods survive without much rain in summer?",
+                back: "The redwoods absorb moisture from the dense fog. Their roots also trap moisture in the soil so other plants can use it too.",
+                funFact: "Redwoods can absorb water through their bark and needles from the fog!"
+            },
+            {
+                category: "resources",
+                front: "What natural resources did the Yurok use from the forest?",
+                back: "They used redwood planks to build houses, collected nuts, berries, and acorns from the forest, and kept small gardens of wild plants. They also fished for salmon in the rivers.",
+                funFact: "The forest provided so much food that the Yurok never needed to develop farming!"
+            },
+            {
+                category: "resources",
+                front: "Why was salmon so important to the Yurok?",
+                back: "Salmon was a major part of their diet. The Yurok smoked salmon to preserve it so they could eat it all year round. They caught salmon in the spring when it swam upstream.",
+                funFact: "Salmon swim upstream from the ocean to lay their eggs in the rivers each year!"
+            },
+            {
+                category: "resources",
+                front: "What did the Yurok collect and eat besides salmon?",
+                back: "They collected nuts, berries, and acorns from the forest. Acorns were especially important — they used them to make soups, porridge, and flour for bread.",
+                funFact: "Just like the Yokuts from Lesson 4, acorns were a key food source!"
+            },
+            {
+                category: "resources",
+                front: "What natural resources did the Modoc use from the plateau?",
+                back: "They used forests of the Modoc Plateau for fuel, food, and shelter. They hunted big game like bears, elk, and deer. They also fished in lakes and gathered berries and seeds.",
+                funFact: "The Modoc collected huckleberries — doing this could increase production of lily pond seed, another food source!"
+            },
+
+            // === CULTURE - YUROK ===
+            {
+                category: "culture",
+                front: "What did Yurok houses look like?",
+                back: "Yurok houses were made of wood planks from redwood trees. They had a small, round doorway. Houses were built partially underground with slanted roofs to protect from wind and rain.",
+                funFact: "They only used naturally fallen trees or removed small amounts of wood so they wouldn't kill the trees!"
+            },
+            {
+                category: "culture",
+                front: "How did the Yurok build their houses without harming the forest?",
+                back: "They used planks from the redwoods to build houses, but they removed only naturally fallen trees or small amounts of wood from large trees without killing them. They lived in harmony with nature.",
+                funFact: "The Yurok practiced sustainable living thousands of years ago!"
+            },
+            {
+                category: "culture",
+                front: "How did early peoples trap salmon using weirs?",
+                back: "They built fence-like structures stretching across the river with platforms. Men and boys would stand on the platform and use spears to kill the trapped fish. The fishermen used weirs to trap salmon.",
+                funFact: "Modern dams on the Klamath River have caused arguments — some people believe they help, others think they hurt salmon populations."
+            },
+            {
+                category: "culture",
+                front: "What are dams on the Klamath River and why are they controversial?",
+                back: "There are several dams along the river. Some people believe they manage natural resources and generate electricity. Others say they reduce the salmon population by blocking fish from swimming upstream.",
+                funFact: "Some groups want to remove the dams to help salmon survive and thrive again."
+            },
+
+            // === CULTURE - MODOC ===
+            {
+                category: "culture",
+                front: "What were Modoc pit houses like?",
+                back: "Pit houses were partially underground. They were protected from extreme cold in winter. The roofs were made of earth. In their permanent villages near lakes, these homes kept them warm.",
+                funFact: "Building underground helped keep the house cool in summer and warm in winter — like natural air conditioning!"
+            },
+            {
+                category: "culture",
+                front: "How did the Modoc move with the seasons?",
+                back: "In spring, they set up temporary camps of wickiups (domes made of willow frames covered with mats). In summer, they moved to the mountains to gather berries and hunt deer and bear. In fall, they prepared for winter. Then they moved back to their permanent village.",
+                funFact: "The Modoc adapted to each season to find the best food and resources!"
+            },
+            {
+                category: "culture",
+                front: "What is a wickiup?",
+                back: "A wickiup is a temporary dome-shaped shelter made of willow frames and covered with mats. The Modoc used them as temporary camps in spring when they left their permanent pit houses.",
+                funFact: "Wickiups were quick to build and easy to take down — perfect for moving with the seasons!"
+            },
+            {
+                category: "culture",
+                front: "What was the Modoc sweathouse like?",
+                back: "It was dome-shaped and covered in leather. The Modoc poured water on hot rocks to fill it with steam. Men sat in the heat to cleanse themselves before a hunt, then jumped into cool river water. They used sweathouses for socializing and religious rituals.",
+                funFact: "They called these sweat baths 'spukfish'!"
+            },
+            {
+                category: "culture",
+                front: "What were Modoc baskets used for?",
+                back: "Modoc women were excellent basket weavers. They made baskets of many shapes and sizes for different purposes. Baskets were used for cooking, storing food, and even as baby carriers.",
+                funFact: "The Modoc also used stoves in baskets for cooking!"
+            },
+            {
+                category: "culture",
+                front: "What was the Modoc stick game?",
+                back: "A game where one player covers the sticks and another player guesses the order. When a player's finger order is correct, they earn points. It was a popular game for fun and socializing.",
+                funFact: "Games and sports were an important part of Modoc culture!"
+            },
+
+            // === CULTURE - SHARED ===
+            {
+                category: "culture",
+                front: "What were shamans in Northwest and Northeast tribes?",
+                back: "Shamans were people thought to have supernatural powers that could be used for healing. In the north, women were often the shamans. Some had special skills like treating snake bites or preventing bear attacks.",
+                funFact: "A major difference from other groups: in the north, women were often the shamans!"
+            },
+            {
+                category: "culture",
+                front: "What was the Sacred Jump Dance?",
+                back: "An annual ceremony practiced by the people of the north. It was meant to renew the world — to 'fix the earth.'",
+                funFact: "This ceremony showed how much the people cared about the earth and nature."
+            },
+            {
+                category: "culture",
+                front: "What are creation stories and why were they important?",
+                back: "Creation stories are a culture's narratives or myths about how the world began and how people came into existence. Through these stories, people explained the natural world and learned to value and care for nature.",
+                funFact: "These stories were passed down from parents to children for generations!"
+            },
+
+            // === VOCAB ===
+            {
+                category: "vocab",
+                front: "What does 'adapting' mean?",
+                back: "Changing or adjusting your lifestyle to fit your surroundings and environment. The early California peoples adapted to their environments by using the natural resources around them.",
+                funFact: "Both the Yurok and Modoc adapted differently based on whether they lived near forests or on the plateau!"
+            },
+            {
+                category: "vocab",
+                front: "What are 'natural resources'?",
+                back: "Things found in nature that people can use — like wood, water, fish, plants, animals, and stone. The early peoples depended on natural resources for food, shelter, and tools.",
+                funFact: "The Northwest had more water resources (rivers, ocean) while the Northeast had more land resources (plateau, forests)."
+            }
+        ];
+
+        let cards = [...allCards];
+        let currentIndex = 0;
+        let knowCount = 0;
+        let learningCount = 0;
+
+        function shuffleArray(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function filterCards(category) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            if (category === 'all') {
+                cards = shuffleArray(allCards);
+            } else {
+                cards = shuffleArray(allCards.filter(c => c.category === category));
+            }
+            currentIndex = 0;
+            knowCount = 0;
+            learningCount = 0;
+            updateScores();
+            renderCard();
+        }
+
+        function renderCard() {
+            if (cards.length === 0) return;
+            const card = cards[currentIndex];
+            const front = document.getElementById('card-front');
+            const back = document.getElementById('card-back');
+            const catClass = 'cat-' + card.category;
+            const catLabel = card.category.charAt(0).toUpperCase() + card.category.slice(1);
+
+            front.innerHTML = `
+                <span class="card-category ${catClass}">${catLabel}</span>
+                <span class="card-number">${currentIndex + 1}/${cards.length}</span>
+                <h3>${card.front}</h3>
+                <span class="tap-hint">Tap to see answer</span>
+            `;
+
+            back.innerHTML = `
+                <span class="card-category ${catClass}">${catLabel}</span>
+                <span class="card-number">${currentIndex + 1}/${cards.length}</span>
+                <p>${card.back}</p>
+                ${card.funFact ? `<div class="fun-fact">${card.funFact}</div>` : ''}
+            `;
+
+            document.getElementById('flashcard').classList.remove('flipped');
+            document.getElementById('card-counter').textContent = `${currentIndex + 1} / ${cards.length}`;
+            document.getElementById('current-card').textContent = currentIndex + 1;
+            document.getElementById('total-cards').textContent = cards.length;
+            updateNav();
+        }
+
+        function flipCard() {
+            document.getElementById('flashcard').classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            if (currentIndex < cards.length - 1) {
+                currentIndex++;
+                renderCard();
+            }
+        }
+
+        function prevCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderCard();
+            }
+        }
+
+        function updateNav() {
+            document.getElementById('prev-btn').disabled = currentIndex === 0;
+            document.getElementById('next-btn').disabled = currentIndex >= cards.length - 1;
+        }
+
+        function markCard(knows) {
+            if (knows) {
+                knowCount++;
+                createEmojis(['⭐', '🌟', '✨'], 3);
+            } else {
+                learningCount++;
+            }
+            updateScores();
+
+            if (currentIndex < cards.length - 1) {
+                currentIndex++;
+                renderCard();
+            } else {
+                document.getElementById('progress-text').textContent =
+                    `Done! You knew ${knowCount} out of ${cards.length} cards. Tap Shuffle to try again!`;
+            }
+        }
+
+        function updateScores() {
+            document.getElementById('know-count').textContent = knowCount;
+            document.getElementById('learning-count').textContent = learningCount;
+        }
+
+        function shuffleAndRestart() {
+            cards = shuffleArray(cards);
+            currentIndex = 0;
+            knowCount = 0;
+            learningCount = 0;
+            updateScores();
+            renderCard();
+            document.getElementById('progress-text').textContent = 'Cards shuffled! Tap a card to flip it!';
+        }
+
+        function speakCard() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const card = cards[currentIndex];
+                const isFlipped = document.getElementById('flashcard').classList.contains('flipped');
+                const text = isFlipped ? card.back : card.front;
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function createEmojis(emojis, count) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const el = document.createElement('div');
+                    el.className = 'emoji-burst';
+                    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    el.style.left = Math.random() * 80 + 10 + '%';
+                    el.style.top = Math.random() * 40 + 30 + '%';
+                    document.body.appendChild(el);
+                    setTimeout(() => el.remove(), 1000);
+                }, i * 80);
+            }
+        }
+
+        // Swipe support
+        let touchStartX = 0;
+        document.getElementById('flashcard-container').addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+        });
+        document.getElementById('flashcard-container').addEventListener('touchend', e => {
+            const diff = e.changedTouches[0].clientX - touchStartX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) prevCard();
+                else nextCard();
+            }
+        });
+
+        // Keyboard support
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') prevCard();
+            if (e.key === 'ArrowRight') nextCard();
+            if (e.key === ' ') { e.preventDefault(); flipCard(); }
+        });
+
+        // Initialize
+        cards = shuffleArray(allCards);
+        renderCard();
+    </script>
+</body>
+</html>

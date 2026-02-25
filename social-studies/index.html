@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Studies - Test Prep</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4a148c 0%, #7b1fa2 50%, #ab47bc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .header .chapter {
+            margin-top: 10px;
+            padding: 6px 16px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.95em;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+            border-color: #ce93d8;
+        }
+        .card .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .card h2 {
+            font-size: 1.3em;
+            color: #4a148c;
+            margin-bottom: 8px;
+        }
+        .card p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+        .card .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .badge.flashcards { background: #f3e5f5; color: #7b1fa2; }
+        .badge.quiz-a { background: #e8eaf6; color: #283593; }
+        .badge.quiz-b { background: #fce4ec; color: #c2185b; }
+        .study-order {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        .study-order strong { color: #ffd54f; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Social Studies Test Prep</h1>
+            <p>Northwest & Northeast Peoples</p>
+            <div class="chapter">Chapter 1, Lesson 6 - Yurok & Modoc</div>
+        </div>
+
+        <a class="card" href="flashcards_lesson6.html">
+            <div class="icon">📚</div>
+            <h2>Study Flashcards</h2>
+            <p>30 flashcards covering all topics: people, vocabulary, resources, culture, and geography. Flip, swipe, and track what you know!</p>
+            <span class="badge flashcards">30 Cards - Start Here</span>
+        </a>
+
+        <a class="card" href="test_prep_quiz_a.html">
+            <div class="icon">📝</div>
+            <h2>Quiz A</h2>
+            <p>15 questions matching your teacher's test format: multiple choice, linked evidence, select two, vocabulary, and ordering.</p>
+            <span class="badge quiz-a">15 Questions</span>
+        </a>
+
+        <a class="card" href="test_prep_quiz_b.html">
+            <div class="icon">🎯</div>
+            <h2>Quiz B</h2>
+            <p>15 completely different questions — same format. Take this after Quiz A to make sure you know everything!</p>
+            <span class="badge quiz-b">15 Different Questions</span>
+        </a>
+
+        <div class="study-order">
+            <strong>Recommended study order:</strong><br>
+            Flashcards first → Quiz A in Practice Mode → Quiz B in Practice Mode → Both Quizzes in Test Mode
+        </div>
+    </div>
+</body>
+</html>

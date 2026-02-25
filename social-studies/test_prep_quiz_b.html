@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Lesson 6 - Quiz B</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4a148c 0%, #7b1fa2 50%, #ab47bc 100%);
+            min-height: 100vh;
+            padding: 15px;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            text-align: center; color: white; margin-bottom: 15px;
+            padding: 15px; background: rgba(255,255,255,0.1); border-radius: 15px;
+        }
+        .header h1 { font-size: 1.4em; margin-bottom: 5px; }
+        .header h2 { font-size: 1.1em; font-weight: normal; opacity: 0.9; }
+        .header p { font-size: 0.9em; opacity: 0.8; margin-top: 5px; }
+        .header .focus-note {
+            margin-top: 8px; padding: 6px 14px; background: rgba(255,193,7,0.3);
+            border-radius: 10px; font-size: 0.85em; display: inline-block;
+        }
+
+        .score-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            background: white; padding: 12px 20px; border-radius: 15px;
+            margin-bottom: 15px; flex-wrap: wrap; gap: 10px;
+        }
+        .score-item { font-weight: bold; font-size: 0.95em; }
+        .score-item.correct { color: #27ae60; }
+        .score-item.wrong { color: #e74c3c; }
+        .score-item.progress { color: #6a1b9a; }
+
+        .progress-bar { width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden; margin-top: 10px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #7b1fa2, #ce93d8); border-radius: 4px; transition: width 0.3s ease; }
+
+        .mode-selector { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
+        .mode-btn {
+            padding: 12px 25px; border: none; border-radius: 25px;
+            font-size: 1em; font-weight: bold; cursor: pointer; transition: all 0.3s ease;
+        }
+        .mode-btn.practice { background: #7b1fa2; color: white; }
+        .mode-btn.test { background: #e74c3c; color: white; }
+        .mode-btn.active { transform: scale(1.1); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .mode-btn:not(.active) { opacity: 0.6; }
+
+        .question-card {
+            background: white; border-radius: 20px; padding: 20px;
+            margin-bottom: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        .question-card.answered-correct { border: 3px solid #27ae60; background: linear-gradient(to bottom, #d4edda, white); }
+        .question-card.answered-wrong { border: 3px solid #e74c3c; background: linear-gradient(to bottom, #f8d7da, white); }
+
+        .question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .question-number { background: #6a1b9a; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.85em; }
+        .question-type { padding: 5px 12px; border-radius: 15px; font-size: 0.75em; font-weight: bold; }
+        .question-type.vocab { background: #f3e5f5; color: #7b1fa2; }
+        .question-type.evidence { background: #e8eaf6; color: #283593; }
+        .question-type.explain { background: #fce4ec; color: #c2185b; }
+        .question-type.select-two { background: #fff3e0; color: #ef6c00; }
+        .question-type.matching { background: #e0f2f1; color: #00695c; }
+        .question-type.linked { background: #ffebee; color: #b71c1c; }
+
+        .passage {
+            background: #f5f0ff; border-left: 4px solid #7b1fa2;
+            padding: 15px; margin-bottom: 15px; font-style: italic;
+            color: #555; border-radius: 0 10px 10px 0; font-size: 0.95em; line-height: 1.5;
+        }
+
+        .question-text { font-size: 1.1em; font-weight: bold; color: #333; margin-bottom: 15px; line-height: 1.4; }
+        .question-text .highlight { background: #e1bee7; padding: 2px 4px; border-radius: 3px; }
+
+        .select-instruction { color: #ef6c00; font-size: 0.9em; font-weight: bold; margin-bottom: 10px; }
+
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        .option {
+            padding: 15px; background: #f8f5ff; border: 2px solid #d1c4e9;
+            border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
+            font-size: 0.95em; line-height: 1.4;
+        }
+        .option:hover:not(.disabled) { background: #ede7f6; border-color: #7b1fa2; }
+        .option.selected { background: #7b1fa2; border-color: #7b1fa2; color: white; }
+        .option.correct { background: #27ae60; border-color: #27ae60; color: white; }
+        .option.wrong { background: #e74c3c; border-color: #e74c3c; color: white; }
+        .option.show-correct { background: #27ae60; border-color: #27ae60; color: white; animation: pulse 0.5s ease; }
+        .option.disabled { cursor: not-allowed; }
+
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+
+        .result-box { display: none; padding: 15px; border-radius: 12px; margin-top: 15px; font-weight: bold; }
+        .result-box.show { display: block; }
+        .result-box.correct { background: #d4edda; color: #155724; border: 2px solid #27ae60; }
+        .result-box.wrong { background: #f8d7da; color: #721c24; border: 2px solid #e74c3c; }
+        .result-box .explanation { font-weight: normal; margin-top: 10px; font-size: 0.9em; line-height: 1.4; }
+        .result-box .tip { margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.05); border-radius: 8px; font-size: 0.85em; font-style: italic; }
+
+        .matching-container { margin-top: 10px; }
+        .matching-slots { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .matching-slot { display: flex; align-items: center; gap: 10px; padding: 10px; background: #f8f5ff; border: 2px solid #d1c4e9; border-radius: 10px; }
+        .slot-number { font-weight: bold; color: #6a1b9a; min-width: 80px; font-size: 0.85em; }
+        .slot-drop {
+            flex: 1; min-height: 40px; border: 2px dashed #b39ddb; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9em; color: #666; cursor: pointer; padding: 8px; transition: all 0.3s ease;
+        }
+        .slot-drop.filled { border-style: solid; border-color: #7b1fa2; background: #f3e5f5; color: #333; }
+        .slot-drop.correct-slot { border-color: #27ae60; background: #d4edda; }
+        .slot-drop.wrong-slot { border-color: #e74c3c; background: #f8d7da; }
+
+        .matching-choices { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .matching-choice {
+            padding: 8px 14px; background: #7b1fa2; color: white;
+            border-radius: 20px; cursor: pointer; font-size: 0.85em; transition: all 0.3s ease; border: none;
+        }
+        .matching-choice:hover { transform: scale(1.05); }
+        .matching-choice.used { opacity: 0.3; cursor: not-allowed; }
+        .matching-choice.selected-choice { outline: 3px solid #ffd54f; }
+
+        .nav-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
+        .nav-btn {
+            padding: 12px 30px; border: none; border-radius: 25px;
+            font-size: 1em; font-weight: bold; cursor: pointer; transition: all 0.3s ease;
+        }
+        .nav-btn.next { background: #7b1fa2; color: white; }
+        .nav-btn.submit { background: #27ae60; color: white; }
+        .nav-btn:hover { transform: scale(1.05); }
+        .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .voice-btn {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 8px 15px; background: #f3e5f5; border: none;
+            border-radius: 20px; cursor: pointer; font-size: 0.85em; margin-bottom: 10px; color: #6a1b9a;
+        }
+
+        .final-results {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); justify-content: center; align-items: center; z-index: 1000;
+        }
+        .final-results.show { display: flex; }
+        .results-content {
+            background: white; border-radius: 25px; padding: 30px; text-align: center;
+            max-width: 90%; max-height: 90vh; overflow-y: auto; animation: bounceIn 0.5s ease;
+        }
+        @keyframes bounceIn { 0% { transform: scale(0); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .results-content h2 { font-size: 1.8em; margin-bottom: 15px; color: #6a1b9a; }
+        .results-content .grade { font-size: 4em; font-weight: bold; margin: 20px 0; }
+        .results-content .grade.A { color: #27ae60; }
+        .results-content .grade.B { color: #3498db; }
+        .results-content .grade.C { color: #f39c12; }
+        .results-content .grade.D { color: #e67e22; }
+        .results-content .grade.F { color: #e74c3c; }
+        .results-content .score-detail { font-size: 1.3em; margin-bottom: 20px; }
+        .results-content .message { font-size: 1.1em; color: #666; margin-bottom: 25px; }
+        .results-content .weak-areas { text-align: left; margin: 15px 0; padding: 15px; background: #f3e5f5; border-radius: 10px; }
+        .results-content .weak-areas h3 { color: #7b1fa2; margin-bottom: 8px; }
+        .results-content .weak-areas li { margin: 5px 0; font-size: 0.95em; }
+
+        .restart-btn {
+            padding: 15px 40px; background: #7b1fa2; color: white; border: none;
+            border-radius: 30px; font-size: 1.1em; font-weight: bold; cursor: pointer; margin: 5px;
+        }
+        .restart-btn.review { background: #e74c3c; }
+
+        .emoji-burst { position: fixed; font-size: 2em; pointer-events: none; animation: float-up 1s ease-out forwards; z-index: 999; }
+        @keyframes float-up { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-100px) scale(1.5); } }
+
+        @media (max-width: 600px) { .header h1 { font-size: 1.2em; } .question-text { font-size: 1em; } .option { padding: 12px; font-size: 0.9em; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Chapter 1, Lesson 6 - Quiz B</h1>
+        <h2>Northwest and Northeast Peoples of California</h2>
+        <p>Different questions from Quiz A - keep practicing!</p>
+        <div class="focus-note">Focus: evidence questions, vocabulary, and select-two</div>
+    </div>
+
+    <div class="score-bar">
+        <span class="score-item correct">Correct: <span id="correct-count">0</span></span>
+        <span class="score-item wrong">Wrong: <span id="wrong-count">0</span></span>
+        <span class="score-item progress">Question: <span id="current-q">1</span>/<span id="total-q">15</span></span>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <div class="mode-selector">
+        <button class="mode-btn practice active" onclick="setMode('practice')">Practice Mode</button>
+        <button class="mode-btn test" onclick="setMode('test')">Test Mode</button>
+    </div>
+
+    <div id="question-container"></div>
+
+    <div class="nav-buttons">
+        <button class="nav-btn next" id="next-btn" onclick="nextQuestion()">Next Question</button>
+    </div>
+
+    <div class="final-results" id="final-results">
+        <div class="results-content">
+            <h2 id="results-title">Quiz B Complete!</h2>
+            <div class="grade" id="grade">A</div>
+            <div class="score-detail" id="score-detail"></div>
+            <div class="message" id="results-message"></div>
+            <div class="weak-areas" id="weak-areas" style="display:none;">
+                <h3>Areas to Review:</h3>
+                <ul id="weak-list"></ul>
+            </div>
+            <button class="restart-btn" onclick="restart()">Try Again</button>
+            <button class="restart-btn review" id="review-btn" onclick="reviewWrong()">Review Mistakes</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // Q1 - Multiple Choice
+            {
+                type: "Multiple Choice", typeClass: "explain", category: "comprehension",
+                question: "Which statement <span class='highlight'>best describes</span> the Northeast culture area of California?",
+                options: [
+                    "A rainy coastal area with many rivers leading to the ocean.",
+                    "A high plateau formed by volcanoes, with parts of the Cascades, fewer major rivers, and many shallow lakes.",
+                    "A hot, dry desert region with very little plant life.",
+                    "A wide valley in the center of the state with flat grasslands."
+                ],
+                correct: 1,
+                explanation: "The Northeast includes the Modoc Plateau and parts of the Cascades. It was formed by volcanoes and has fewer rivers but many shallow lakes — very different from the wet Northwest."
+            },
+            // Q2 - Linked Evidence to Q1
+            {
+                type: "Multiple Choice", typeClass: "linked", category: "evidence",
+                question: "Which evidence from the text <span class='highlight'>best supports</span> the correct response to question 1?",
+                options: [
+                    "\"The Northwest area is bordered by the Pacific Ocean.\"",
+                    "\"The Northeast area includes part of the Cascades and the Modoc Plateau. It is an area formed by volcanoes. It has fewer major rivers but many shallow lakes.\"",
+                    "\"The Yurok lived along the Klamath River.\"",
+                    "\"About 10 mid-size groups grew and did well.\""
+                ],
+                correct: 1,
+                explanation: "This quote directly lists the specific features: Cascades, Modoc Plateau, formed by volcanoes, fewer rivers, shallow lakes — exactly matching the answer.",
+                tip: "The best supporting evidence repeats or confirms the KEY details from your answer."
+            },
+            // Q3 - Multiple Choice
+            {
+                type: "Multiple Choice", typeClass: "explain", category: "comprehension",
+                question: "Which statement <span class='highlight'>best explains</span> how giant redwoods survive the dry summer without much rain?",
+                options: [
+                    "They store water inside their trunks like a cactus.",
+                    "They absorb moisture from the dense fog, and their roots trap moisture in the soil.",
+                    "Other trees share water with the redwoods through their roots.",
+                    "They go dormant and stop growing during summer."
+                ],
+                correct: 1,
+                explanation: "Even though there's not much rain in summer, the redwoods get water by absorbing moisture from the dense fog. Their roots also trap moisture in the soil for other plants to use."
+            },
+            // Q4 - Vocabulary
+            {
+                type: "Multiple Choice", typeClass: "vocab", category: "vocabulary",
+                passage: "\"The people explained the natural world and learned to value and care for nature through creation stories — a culture's narratives or myths about how the world began and how people came into existence.\"",
+                question: "What is the meaning of <span class='highlight'>creation stories</span> as used in this paragraph?",
+                options: [
+                    "Written histories kept on scrolls",
+                    "A culture's narratives or myths about how the world began and how people came into existence",
+                    "Songs performed during healing ceremonies",
+                    "Instructions for building houses and boats"
+                ],
+                correct: 1,
+                explanation: "Creation stories are a culture's narratives or myths about how the world began and how people came into existence. They helped people understand and care for the natural world."
+            },
+            // Q5 - Select Two (evidence)
+            {
+                type: "Select Two", typeClass: "select-two", category: "evidence-select",
+                question: "Which <span class='highlight'>TWO</span> pieces of evidence show that the Yurok cared about living in harmony with the forest?",
+                options: [
+                    "\"They used planks from the redwoods to build houses, but they removed only naturally fallen trees, or they removed small amounts of wood from large trees without killing them.\"",
+                    "\"Salmon was a major part of their diet.\"",
+                    "\"The forest provided food so well that the Yurok never needed to develop farming.\"",
+                    "\"Some shamans had special skills such as treating snake bites.\""
+                ],
+                correct: [0, 2],
+                selectTwo: true,
+                explanation: "Both show harmony with the forest: they only used fallen trees or small amounts (protecting trees), and the forest provided enough that they didn't need to clear land for farming.",
+                tip: "For Select Two: ask yourself 'Does this quote show caring about the forest?' for EACH option."
+            },
+            // Q6 - Multiple Choice
+            {
+                type: "Multiple Choice", typeClass: "explain", category: "comprehension",
+                question: "Which statement <span class='highlight'>best describes</span> what the Modoc sweathouse was used for?",
+                options: [
+                    "Only for cooking food",
+                    "For cleansing before a hunt, socializing, and religious rituals",
+                    "Only for storing dried food",
+                    "Only for children to play in during winter"
+                ],
+                correct: 1,
+                explanation: "The Modoc sweathouse served multiple purposes: men sat in the steam heat to cleanse before a hunt, AND they used sweathouses for socializing AND religious rituals. They called them 'spukfish.'"
+            },
+            // Q7 - Linked Evidence to Q6
+            {
+                type: "Multiple Choice", typeClass: "linked", category: "evidence",
+                question: "Which evidence from the text <span class='highlight'>best supports</span> the correct response to question 6?",
+                options: [
+                    "\"The sweathouse was dome-shaped.\"",
+                    "\"The men sat in the heat to cleanse themselves before a hunt. They also used the sweathouses for socializing and for some religious rituals.\"",
+                    "\"The Modoc moved with the seasons.\"",
+                    "\"Modoc women were excellent basket weavers.\""
+                ],
+                correct: 1,
+                explanation: "This quote lists ALL three uses: cleansing before hunts, socializing, and religious rituals — matching the answer that sweathouses had multiple purposes.",
+                tip: "When a question asks about multiple uses, find the quote that mentions ALL the uses, not just one."
+            },
+            // Q8 - Vocabulary
+            {
+                type: "Multiple Choice", typeClass: "vocab", category: "vocabulary",
+                passage: "\"The early peoples used the forests of the Modoc Plateau for fuel, food, and shelter. Big game such as bears, elk, and deer were plentiful for hunting. Early peoples fished in lakes and used lake water for daily activities.\"",
+                question: "What is the meaning of <span class='highlight'>plentiful</span> in this paragraph?",
+                options: [
+                    "Dangerous and hard to catch",
+                    "Available in large amounts; abundant",
+                    "Rare and hard to find",
+                    "Small in size"
+                ],
+                correct: 1,
+                explanation: "Plentiful means available in large amounts or abundant. Big game like bears, elk, and deer were plentiful — meaning there were lots of them available for hunting on the plateau."
+            },
+            // Q9 - Select Two
+            {
+                type: "Select Two", typeClass: "select-two", category: "evidence-select",
+                question: "Which <span class='highlight'>TWO</span> groups of people lived in the Northwest culture area?",
+                options: [
+                    "The Yurok",
+                    "The Modoc",
+                    "The Hupa",
+                    "The Achumawi"
+                ],
+                correct: [0, 2],
+                selectTwo: true,
+                explanation: "The Yurok and the Hupa are Northwest peoples. The Modoc and Achumawi are Northeast peoples who lived on the plateau. Remember: Northwest = coast/rivers, Northeast = plateau/lakes."
+            },
+            // Q10 - Multiple Choice
+            {
+                type: "Multiple Choice", typeClass: "explain", category: "comprehension",
+                question: "Which statement <span class='highlight'>best explains</span> why there is a controversy about dams on the Klamath River?",
+                options: [
+                    "Nobody knows who built the dams.",
+                    "Some people want dams for electricity and resource management, but others say dams block salmon from swimming upstream and reduce the population.",
+                    "The dams are too old and might collapse.",
+                    "Only the Yurok people are allowed to use the dams."
+                ],
+                correct: 1,
+                explanation: "The controversy is that dams provide benefits (electricity, managing resources) BUT they also harm salmon by blocking fish from swimming upstream. People disagree about which is more important."
+            },
+            // Q11 - Linked Evidence to Q10
+            {
+                type: "Multiple Choice", typeClass: "linked", category: "evidence",
+                question: "Which evidence from the text <span class='highlight'>best supports</span> the correct response to question 10?",
+                options: [
+                    "\"The Klamath River starts at Klamath Lake in Oregon.\"",
+                    "\"Some people have arguments about the dams. Some believe they help manage natural resources and generate electricity. Others say the dams reduced the salmon population by blocking upstream travel.\"",
+                    "\"Salmon swim upstream in the spring.\"",
+                    "\"Early peoples like the Yurok built weirs to trap salmon.\""
+                ],
+                correct: 1,
+                explanation: "This quote presents BOTH sides of the controversy: pro-dam (manage resources, electricity) and anti-dam (reduced salmon). It directly supports the answer about the disagreement.",
+                tip: "When questions ask about controversy or debate, look for evidence that shows BOTH sides."
+            },
+            // Q12 - Vocabulary
+            {
+                type: "Multiple Choice", typeClass: "vocab", category: "vocabulary",
+                passage: "\"Like other groups, the Northwest and Northeast peoples had shamans, who were people thought to have supernatural powers that could be used for healing.\"",
+                question: "What is the meaning of <span class='highlight'>supernatural</span> in this paragraph?",
+                options: [
+                    "Very strong and athletic",
+                    "Beyond what is normal or natural; having magical or spiritual qualities",
+                    "Related to nature and the outdoors",
+                    "Very smart and educated"
+                ],
+                correct: 1,
+                explanation: "Supernatural means beyond what is normal or natural — having magical or spiritual qualities. Shamans were thought to have supernatural (magical/spiritual) powers used for healing."
+            },
+            // Q13 - Matching/Ordering
+            {
+                type: "Matching", typeClass: "matching", category: "ordering",
+                question: "Match each people or place to its <span class='highlight'>correct description</span>.",
+                matchItems: [
+                    "Lived along Klamath River, used redwood for houses",
+                    "Lived on the plateau, used pit houses and wickiups",
+                    "Tallest trees in the world, up to 365 feet",
+                    "Fence-like structure across river to trap fish",
+                    "Annual ceremony to 'fix the earth'"
+                ],
+                correctOrder: [0, 1, 2, 3, 4],
+                seasonLabels: ["Yurok", "Modoc", "Giant Redwoods", "Weir", "Sacred Jump Dance"],
+                explanation: "Yurok = Klamath River + redwood houses. Modoc = plateau + pit houses + wickiups. Giant Redwoods = tallest trees (365 ft). Weir = fish trap across river. Sacred Jump Dance = ceremony to fix the earth."
+            },
+            // Q14 - Select Two (evidence)
+            {
+                type: "Select Two", typeClass: "select-two", category: "evidence-select",
+                question: "Which <span class='highlight'>TWO</span> statements describe what the Modoc used their environment for?",
+                options: [
+                    "\"They used the forests of the Modoc Plateau for fuel, food, and shelter.\"",
+                    "\"They sailed across the Pacific Ocean in large canoes.\"",
+                    "\"They fished in lakes and used lake water for daily activities.\"",
+                    "\"They grew corn and wheat in large farm fields.\""
+                ],
+                correct: [0, 2],
+                selectTwo: true,
+                explanation: "The Modoc used plateau forests for fuel/food/shelter AND fished in lakes and used lake water daily. They did NOT sail the ocean or farm — they were hunters and gatherers.",
+                tip: "Eliminate answers that don't match what you know about the group. The Modoc were inland, not coastal."
+            },
+            // Q15 - Multiple Choice
+            {
+                type: "Multiple Choice", typeClass: "explain", category: "comprehension",
+                question: "Which statement <span class='highlight'>best describes</span> what the Modoc stick game was?",
+                options: [
+                    "A hunting training exercise for young boys",
+                    "A game where one player covers sticks and another guesses the order, earning points for correct guesses",
+                    "A game where players throw sticks at targets",
+                    "A ceremony led by shamans to predict the weather"
+                ],
+                correct: 1,
+                explanation: "The Modoc stick game was a guessing game: one player covers and arranges sticks, and the other player tries to guess the correct finger order. Getting it right earns points. It was played for fun and socializing."
+            }
+        ];
+
+        let currentQuestion = 0, correctCount = 0, wrongCount = 0;
+        let answeredQuestions = new Set(), wrongQuestions = [];
+        let currentMode = 'practice', selectedOptions = new Set();
+        let shuffledQuestions = [], matchingSelections = [], matchingSelectedChoice = null;
+        let categoryWrong = {};
+
+        function shuffleArray(a) {
+            const b = [...a];
+            for (let i = b.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [b[i], b[j]] = [b[j], b[i]];
+            }
+            return b;
+        }
+
+        function smartShuffle(qs) {
+            const groups = [];
+            let i = 0;
+            while (i < qs.length) {
+                if (i + 1 < qs.length && qs[i + 1].typeClass === 'linked') {
+                    groups.push([qs[i], qs[i + 1]]);
+                    i += 2;
+                } else {
+                    groups.push([qs[i]]);
+                    i++;
+                }
+            }
+            return shuffleArray(groups).flat();
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.mode-btn.${mode}`).classList.add('active');
+            restart();
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text.replace(/<[^>]*>/g, ''));
+                u.rate = 0.9;
+                window.speechSynthesis.speak(u);
+            }
+        }
+
+        function createEmojis(emojis, count) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const el = document.createElement('div');
+                    el.className = 'emoji-burst';
+                    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    el.style.left = Math.random() * 80 + 10 + '%';
+                    el.style.top = Math.random() * 40 + 30 + '%';
+                    document.body.appendChild(el);
+                    setTimeout(() => el.remove(), 1000);
+                }, i * 80);
+            }
+        }
+
+        function renderQuestion() {
+            const q = shuffledQuestions[currentQuestion];
+            const container = document.getElementById('question-container');
+            selectedOptions.clear();
+            matchingSelections = [];
+            matchingSelectedChoice = null;
+            if (q.type === "Matching") renderMatching(q, container);
+            else renderStandard(q, container);
+            document.getElementById('current-q').textContent = currentQuestion + 1;
+            document.getElementById('total-q').textContent = shuffledQuestions.length;
+            document.getElementById('progress-fill').style.width = ((currentQuestion) / shuffledQuestions.length * 100) + '%';
+            updateNextButton();
+        }
+
+        function renderStandard(q, container) {
+            let html = `<div class="question-card" id="question-card">
+                <div class="question-header">
+                    <span class="question-number">Question ${currentQuestion + 1}</span>
+                    <span class="question-type ${q.typeClass}">${q.type}</span>
+                </div>
+                <button class="voice-btn" onclick="speak(document.getElementById('q-text').textContent)">Read Aloud</button>`;
+            if (q.passage) html += `<div class="passage">${q.passage}</div>`;
+            html += `<div class="question-text" id="q-text">${q.question}</div>`;
+            if (q.selectTwo) html += `<div class="select-instruction">Select TWO answers</div>`;
+            html += `<div class="options">`;
+            q.options.forEach((opt, i) => {
+                html += `<div class="option" data-index="${i}" onclick="selectOption(${i})">${opt}</div>`;
+            });
+            html += `</div><div class="result-box" id="result-box"><span id="result-text"></span><div class="explanation" id="explanation"></div></div></div>`;
+            container.innerHTML = html;
+        }
+
+        function renderMatching(q, container) {
+            matchingSelections = new Array(q.matchItems.length).fill(null);
+            let html = `<div class="question-card" id="question-card">
+                <div class="question-header">
+                    <span class="question-number">Question ${currentQuestion + 1}</span>
+                    <span class="question-type ${q.typeClass}">Matching</span>
+                </div>
+                <div class="question-text">${q.question}</div>
+                <div class="matching-container"><div class="matching-slots">`;
+            q.seasonLabels.forEach((label, i) => {
+                html += `<div class="matching-slot"><span class="slot-number">${label}</span>
+                    <div class="slot-drop" id="slot-${i}" onclick="clickSlot(${i})">Click to place</div></div>`;
+            });
+            html += `</div><div class="matching-choices" id="matching-choices">`;
+            const shuffled = q.matchItems.map((t, i) => ({text: t, idx: i}));
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            shuffled.forEach(item => {
+                html += `<button class="matching-choice" data-orig="${item.idx}" onclick="selectMatchChoice(this, ${item.idx})">${item.text}</button>`;
+            });
+            html += `</div></div>
+                <div style="text-align:center;margin-top:15px;">
+                    <button class="nav-btn submit" onclick="submitMatching()" id="submit-matching-btn" disabled>Check Answers</button>
+                </div>
+                <div class="result-box" id="result-box"><span id="result-text"></span><div class="explanation" id="explanation"></div></div></div>`;
+            container.innerHTML = html;
+        }
+
+        function selectMatchChoice(el, idx) {
+            if (answeredQuestions.has(currentQuestion)) return;
+            document.querySelectorAll('.matching-choice').forEach(c => c.classList.remove('selected-choice'));
+            if (!el.classList.contains('used')) { matchingSelectedChoice = idx; el.classList.add('selected-choice'); }
+        }
+
+        function clickSlot(slotIdx) {
+            if (answeredQuestions.has(currentQuestion) || matchingSelectedChoice === null) return;
+            const q = shuffledQuestions[currentQuestion];
+            if (matchingSelections[slotIdx] !== null) {
+                document.querySelectorAll('.matching-choice').forEach(c => {
+                    if (parseInt(c.dataset.orig) === matchingSelections[slotIdx]) c.classList.remove('used');
+                });
+            }
+            matchingSelections[slotIdx] = matchingSelectedChoice;
+            const slot = document.getElementById(`slot-${slotIdx}`);
+            slot.textContent = q.matchItems[matchingSelectedChoice];
+            slot.classList.add('filled');
+            document.querySelectorAll('.matching-choice').forEach(c => {
+                if (parseInt(c.dataset.orig) === matchingSelectedChoice) { c.classList.add('used'); c.classList.remove('selected-choice'); }
+            });
+            matchingSelectedChoice = null;
+            document.getElementById('submit-matching-btn').disabled = !matchingSelections.every(s => s !== null);
+        }
+
+        function submitMatching() {
+            if (answeredQuestions.has(currentQuestion)) return;
+            const q = shuffledQuestions[currentQuestion];
+            answeredQuestions.add(currentQuestion);
+            let allCorrect = true;
+            matchingSelections.forEach((sel, i) => {
+                const slot = document.getElementById(`slot-${i}`);
+                if (sel === q.correctOrder[i]) slot.classList.add('correct-slot');
+                else { slot.classList.add('wrong-slot'); allCorrect = false; }
+            });
+            handleResult(allCorrect, q);
+        }
+
+        function selectOption(index) {
+            if (answeredQuestions.has(currentQuestion)) return;
+            const q = shuffledQuestions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            if (q.selectTwo) {
+                if (selectedOptions.has(index)) { selectedOptions.delete(index); options[index].classList.remove('selected'); }
+                else if (selectedOptions.size < 2) { selectedOptions.add(index); options[index].classList.add('selected'); }
+                if (selectedOptions.size === 2) setTimeout(() => submitAnswer(), 300);
+            } else {
+                options.forEach(o => o.classList.remove('selected'));
+                selectedOptions.clear();
+                selectedOptions.add(index);
+                options[index].classList.add('selected');
+                setTimeout(() => submitAnswer(), 300);
+            }
+        }
+
+        function submitAnswer() {
+            if (answeredQuestions.has(currentQuestion)) return;
+            const q = shuffledQuestions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            answeredQuestions.add(currentQuestion);
+            options.forEach(o => o.classList.add('disabled'));
+            let isCorrect = false;
+            if (q.selectTwo) {
+                const sel = Array.from(selectedOptions).sort((a,b) => a-b);
+                const cor = [...q.correct].sort((a,b) => a-b);
+                isCorrect = sel.length === 2 && sel[0] === cor[0] && sel[1] === cor[1];
+                options.forEach((o, i) => {
+                    if (q.correct.includes(i)) o.classList.add('show-correct');
+                    else if (selectedOptions.has(i)) o.classList.add('wrong');
+                });
+            } else {
+                const sel = Array.from(selectedOptions)[0];
+                isCorrect = sel === q.correct;
+                if (isCorrect) options[sel].classList.add('correct');
+                else { options[sel].classList.add('wrong'); options[q.correct].classList.add('show-correct'); }
+            }
+            handleResult(isCorrect, q);
+        }
+
+        function handleResult(isCorrect, q) {
+            const card = document.getElementById('question-card');
+            const rb = document.getElementById('result-box');
+            const rt = document.getElementById('result-text');
+            const ex = document.getElementById('explanation');
+            if (isCorrect) {
+                correctCount++; card.classList.add('answered-correct'); rb.classList.add('correct');
+                rt.textContent = 'Correct!'; createEmojis(['⭐','🌟','✨','🎉'], 4);
+                if (currentMode === 'practice') speak("Correct! Great job!");
+            } else {
+                wrongCount++; wrongQuestions.push(currentQuestion);
+                categoryWrong[q.category] = (categoryWrong[q.category] || 0) + 1;
+                card.classList.add('answered-wrong'); rb.classList.add('wrong');
+                rt.textContent = 'Not quite right';
+                if (currentMode === 'practice') speak("Not quite. Let me explain.");
+            }
+            if (currentMode === 'practice') {
+                let expHtml = q.explanation;
+                if (q.tip) expHtml += `<div class="tip">Tip: ${q.tip}</div>`;
+                ex.innerHTML = expHtml;
+                rb.classList.add('show');
+            }
+            document.getElementById('correct-count').textContent = correctCount;
+            document.getElementById('wrong-count').textContent = wrongCount;
+            updateNextButton();
+        }
+
+        function updateNextButton() {
+            const btn = document.getElementById('next-btn');
+            if (currentQuestion >= shuffledQuestions.length - 1 && answeredQuestions.has(currentQuestion)) {
+                btn.textContent = 'See Results'; btn.onclick = showResults;
+            } else { btn.textContent = 'Next Question'; btn.onclick = nextQuestion; }
+            btn.disabled = !answeredQuestions.has(currentQuestion);
+        }
+
+        function nextQuestion() { if (currentQuestion < shuffledQuestions.length - 1) { currentQuestion++; renderQuestion(); } }
+
+        function showResults() {
+            const total = shuffledQuestions.length;
+            const pct = Math.round((correctCount / total) * 100);
+            let grade, title, message;
+            if (pct >= 90) { grade='A'; title='Outstanding!'; message="You're ready for your test! Go get that A!"; }
+            else if (pct >= 80) { grade='B'; title='Great Job!'; message="Almost there! Review flashcards for the ones you missed."; }
+            else if (pct >= 70) { grade='C'; title='Good Effort!'; message="Try Quiz A again or review the flashcards!"; }
+            else if (pct >= 60) { grade='D'; title='Keep Studying!'; message="Review flashcards, then try both quizzes again!"; }
+            else { grade='F'; title="Don't Give Up!"; message="Start with the flashcards, then try Quiz A first!"; }
+            speak(`You got ${pct} percent. ${message}`);
+            document.getElementById('results-title').textContent = title;
+            document.getElementById('grade').textContent = grade;
+            document.getElementById('grade').className = 'grade ' + grade;
+            document.getElementById('score-detail').textContent = `${correctCount}/${total} Correct (${pct}%)`;
+            document.getElementById('results-message').textContent = message;
+            document.getElementById('review-btn').style.display = wrongQuestions.length > 0 ? 'inline-block' : 'none';
+            const weakDiv = document.getElementById('weak-areas'), weakList = document.getElementById('weak-list');
+            weakList.innerHTML = '';
+            const names = { evidence: 'Evidence questions', 'evidence-select': 'Select Two Evidence', vocabulary: 'Vocabulary', comprehension: 'Comprehension', ordering: 'Matching' };
+            let hasWeak = false;
+            for (const [c, n] of Object.entries(categoryWrong)) {
+                if (n > 0) { hasWeak = true; weakList.innerHTML += `<li>${names[c]||c}: ${n} wrong</li>`; }
+            }
+            weakDiv.style.display = hasWeak ? 'block' : 'none';
+            document.getElementById('final-results').classList.add('show');
+            if (pct >= 80) createEmojis(['🏆','⭐','🌟','🎉','👏'], 8);
+        }
+
+        function restart() {
+            currentQuestion = 0; correctCount = 0; wrongCount = 0;
+            answeredQuestions.clear(); wrongQuestions = []; selectedOptions.clear(); categoryWrong = {};
+            shuffledQuestions = smartShuffle(questions);
+            document.getElementById('correct-count').textContent = 0;
+            document.getElementById('wrong-count').textContent = 0;
+            document.getElementById('final-results').classList.remove('show');
+            renderQuestion();
+        }
+
+        function reviewWrong() {
+            document.getElementById('final-results').classList.remove('show');
+            shuffledQuestions = shuffleArray(wrongQuestions.map(i => shuffledQuestions[i]));
+            currentQuestion = 0; correctCount = 0; wrongCount = 0;
+            answeredQuestions.clear(); wrongQuestions = []; categoryWrong = {};
+            document.getElementById('correct-count').textContent = 0;
+            document.getElementById('wrong-count').textContent = 0;
+            speak("Let's review the questions you missed!");
+            renderQuestion();
+        }
+
+        shuffledQuestions = smartShuffle(questions);
+        renderQuestion();
+    </script>
+</body>
+</html>
