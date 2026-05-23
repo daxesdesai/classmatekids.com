@@ -43,6 +43,67 @@ body {
     min-height: 100vh;
     color: var(--butterfly-ink);
     line-height: 1.6;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Butterfly background decorations */
+.butterfly-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.butterfly-bg .butterfly {
+    position: absolute;
+    user-select: none;
+    will-change: transform;
+    filter: drop-shadow(0 2px 6px rgba(128, 90, 213, 0.25));
+}
+
+/* Each butterfly varies in size, start position, and animation timing */
+.butterfly-bg .butterfly:nth-child(1) { top: 8%;  left: 6%;  font-size: 2.2rem; opacity: 0.55; animation: butterfly-float-1 14s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(2) { top: 18%; right: 8%; font-size: 1.6rem; opacity: 0.5;  animation: butterfly-float-2 18s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(3) { top: 40%; left: 3%;  font-size: 1.4rem; opacity: 0.45; animation: butterfly-float-3 16s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(4) { top: 55%; right: 5%; font-size: 2rem;   opacity: 0.55; animation: butterfly-float-1 20s ease-in-out infinite reverse; }
+.butterfly-bg .butterfly:nth-child(5) { top: 72%; left: 10%; font-size: 1.8rem; opacity: 0.5;  animation: butterfly-float-2 17s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(6) { top: 88%; right: 12%; font-size: 1.5rem; opacity: 0.5; animation: butterfly-float-3 19s ease-in-out infinite reverse; }
+.butterfly-bg .butterfly:nth-child(7) { top: 30%; left: 50%; font-size: 1.3rem; opacity: 0.4;  animation: butterfly-float-1 22s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(8) { top: 65%; left: 45%; font-size: 1.7rem; opacity: 0.45; animation: butterfly-float-2 21s ease-in-out infinite reverse; }
+
+@keyframes butterfly-float-1 {
+    0%, 100% { transform: translate(0, 0) rotate(-8deg); }
+    25%      { transform: translate(30px, -20px) rotate(6deg); }
+    50%      { transform: translate(60px, 15px) rotate(-4deg); }
+    75%      { transform: translate(20px, 35px) rotate(10deg); }
+}
+
+@keyframes butterfly-float-2 {
+    0%, 100% { transform: translate(0, 0) rotate(5deg); }
+    33%      { transform: translate(-35px, 25px) rotate(-10deg); }
+    66%      { transform: translate(-15px, -30px) rotate(8deg); }
+}
+
+@keyframes butterfly-float-3 {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    20%      { transform: translate(25px, 20px) rotate(12deg); }
+    50%      { transform: translate(-10px, 40px) rotate(-6deg); }
+    80%      { transform: translate(-30px, 10px) rotate(8deg); }
+}
+
+/* Ensure all page content sits above the butterflies */
+#loading,
+#error-container,
+#invitation-content,
+#admin-content {
+    position: relative;
+    z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .butterfly-bg .butterfly { animation: none; }
 }
 
 .container {
