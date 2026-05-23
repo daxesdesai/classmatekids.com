@@ -64,14 +64,24 @@ body {
 }
 
 /* Each butterfly varies in size, start position, and animation timing */
-.butterfly-bg .butterfly:nth-child(1) { top: 8%;  left: 6%;  font-size: 2.2rem; opacity: 0.55; animation: butterfly-float-1 14s ease-in-out infinite; }
-.butterfly-bg .butterfly:nth-child(2) { top: 18%; right: 8%; font-size: 1.6rem; opacity: 0.5;  animation: butterfly-float-2 18s ease-in-out infinite; }
-.butterfly-bg .butterfly:nth-child(3) { top: 40%; left: 3%;  font-size: 1.4rem; opacity: 0.45; animation: butterfly-float-3 16s ease-in-out infinite; }
-.butterfly-bg .butterfly:nth-child(4) { top: 55%; right: 5%; font-size: 2rem;   opacity: 0.55; animation: butterfly-float-1 20s ease-in-out infinite reverse; }
-.butterfly-bg .butterfly:nth-child(5) { top: 72%; left: 10%; font-size: 1.8rem; opacity: 0.5;  animation: butterfly-float-2 17s ease-in-out infinite; }
-.butterfly-bg .butterfly:nth-child(6) { top: 88%; right: 12%; font-size: 1.5rem; opacity: 0.5; animation: butterfly-float-3 19s ease-in-out infinite reverse; }
-.butterfly-bg .butterfly:nth-child(7) { top: 30%; left: 50%; font-size: 1.3rem; opacity: 0.4;  animation: butterfly-float-1 22s ease-in-out infinite; }
-.butterfly-bg .butterfly:nth-child(8) { top: 65%; left: 45%; font-size: 1.7rem; opacity: 0.45; animation: butterfly-float-2 21s ease-in-out infinite reverse; }
+.butterfly-bg .butterfly:nth-child(1)  { top: 5%;  left: 6%;   font-size: 2.2rem; opacity: 0.55; animation: butterfly-float-1 14s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(2)  { top: 12%; right: 8%;  font-size: 1.6rem; opacity: 0.5;  animation: butterfly-float-2 18s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(3)  { top: 22%; left: 22%;  font-size: 1.1rem; opacity: 0.4;  animation: butterfly-float-3 13s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(4)  { top: 28%; right: 22%; font-size: 1.8rem; opacity: 0.55; animation: butterfly-float-1 20s ease-in-out infinite reverse; }
+.butterfly-bg .butterfly:nth-child(5)  { top: 36%; left: 3%;   font-size: 1.4rem; opacity: 0.45; animation: butterfly-float-3 16s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(6)  { top: 38%; left: 50%;  font-size: 1.3rem; opacity: 0.4;  animation: butterfly-float-1 22s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(7)  { top: 45%; right: 4%;  font-size: 2rem;   opacity: 0.55; animation: butterfly-float-2 19s ease-in-out infinite reverse; }
+.butterfly-bg .butterfly:nth-child(8)  { top: 50%; left: 30%;  font-size: 1rem;   opacity: 0.35; animation: butterfly-float-3 24s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(9)  { top: 56%; right: 28%; font-size: 1.5rem; opacity: 0.45; animation: butterfly-float-1 17s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(10) { top: 62%; left: 8%;   font-size: 1.9rem; opacity: 0.5;  animation: butterfly-float-2 21s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(11) { top: 68%; left: 48%;  font-size: 1.7rem; opacity: 0.45; animation: butterfly-float-2 21s ease-in-out infinite reverse; }
+.butterfly-bg .butterfly:nth-child(12) { top: 72%; right: 8%;  font-size: 1.2rem; opacity: 0.4;  animation: butterfly-float-3 18s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(13) { top: 78%; left: 18%;  font-size: 2.1rem; opacity: 0.55; animation: butterfly-float-1 23s ease-in-out infinite reverse; }
+.butterfly-bg .butterfly:nth-child(14) { top: 82%; right: 38%; font-size: 1.4rem; opacity: 0.45; animation: butterfly-float-2 16s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(15) { top: 88%; left: 5%;   font-size: 1.1rem; opacity: 0.35; animation: butterfly-float-3 25s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(16) { top: 90%; right: 14%; font-size: 1.6rem; opacity: 0.5;  animation: butterfly-float-3 19s ease-in-out infinite reverse; }
+.butterfly-bg .butterfly:nth-child(17) { top: 95%; left: 42%;  font-size: 1.3rem; opacity: 0.4;  animation: butterfly-float-1 20s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(18) { top: 15%; left: 42%;  font-size: 1.4rem; opacity: 0.45; animation: butterfly-float-2 22s ease-in-out infinite reverse; }
 
 @keyframes butterfly-float-1 {
     0%, 100% { transform: translate(0, 0) rotate(-8deg); }
