@@ -133,23 +133,6 @@ body {
     .butterfly-bg .butterfly { animation: none; }
 }
 
-/* Mobile: keep all butterflies but disable animations + backdrop-filter
-   (those were the expensive bits, not the count of static emojis) */
-@media (max-width: 768px) {
-    .butterfly-bg .butterfly { animation: none; }
-
-    .details-card,
-    .rsvp-section,
-    .message-section,
-    .gallery-section,
-    .video-section,
-    .stat-card,
-    .admin-section {
-        backdrop-filter: none;
-        -webkit-backdrop-filter: none;
-    }
-}
-
 .container {
     max-width: 800px;
     margin: 0 auto;
