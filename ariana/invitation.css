@@ -133,6 +133,30 @@ body {
     .butterfly-bg .butterfly { animation: none; }
 }
 
+/* Touch devices only (phones/tablets) — desktop is unaffected.
+   The killers on iOS scroll were:
+   1. continuous transform animations on 26 position:fixed elements
+   2. backdrop-filter recomposing as the URL bar slides
+   Both are dropped here; butterfly count stays at 26 (static is cheap). */
+@media (hover: none) and (pointer: coarse) {
+    .butterfly-bg .butterfly {
+        animation: none;
+        will-change: auto;
+        filter: none;
+    }
+
+    .details-card,
+    .rsvp-section,
+    .message-section,
+    .gallery-section,
+    .video-section,
+    .stat-card,
+    .admin-section {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+}
+
 .container {
     max-width: 800px;
     margin: 0 auto;
