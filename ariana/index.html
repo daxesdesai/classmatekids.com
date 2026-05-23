@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ariana's 10th Birthday Party!</title>
+    <meta name="description" content="You're invited to Ariana's 10th Birthday Party - Butterfly Theme!">
+
+    <!-- Prevent search indexing for private invitation -->
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/appicon.png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="invitation.css?v=1">
+</head>
+<body>
+    <!-- Loading State -->
+    <div id="loading" class="loading">
+        <div class="container">
+            <div class="loading-spinner"></div>
+            <p>Loading your invitation...</p>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div id="error-container" class="error-container hidden">
+        <div class="container">
+            <div class="error-icon">😕</div>
+            <h1 id="error-title" class="error-title">Oops!</h1>
+            <p id="error-message" class="error-message">Something went wrong.</p>
+        </div>
+    </div>
+
+    <!-- Main Invitation Content -->
+    <div id="invitation-content" class="hidden">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <span class="hero-badge">🦋 You're Invited! 🦋</span>
+                <h1 class="hero-title">Ariana's 10th Birthday</h1>
+                <p class="hero-date">Saturday, June 13, 2026</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <!-- Photo Gallery -->
+            <section class="gallery-section">
+                <h2>🦋 Our Birthday Girl</h2>
+                <div class="photo-gallery">
+                    <div class="photo-frame">
+                        <img src="photo3.jpg" alt="Ariana">
+                    </div>
+                    <div class="photo-frame">
+                        <img src="photo1.jpg" alt="Ariana with kangaroos">
+                    </div>
+                    <div class="photo-frame">
+                        <img src="photo2.jpg" alt="Ariana feeding kangaroos">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonial Video -->
+            <!-- TODO: Replace the placeholder with one of:
+                 (a) <video controls poster="video-poster.jpg"><source src="testimonial.mp4" type="video/mp4"></video>
+                 (b) <iframe src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+            -->
+            <section class="video-section">
+                <h2>💜 A Special Message</h2>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div class="icon">🎬</div>
+                        <div><strong>Video coming soon</strong></div>
+                        <div style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">A heartfelt message from Ariana will appear here.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Party Details -->
+            <section class="details-card">
+                <h2>📍 Party Details</h2>
+
+                <div class="detail-row">
+                    <div class="detail-icon">📅</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Date</div>
+                        <div class="detail-value">Saturday, June 13, 2026</div>
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-icon">⏰</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Time</div>
+                        <div class="detail-value">12:00 PM &ndash; 3:00 PM</div>
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-icon">📍</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Location</div>
+                        <div class="detail-value">
+                            <a href="https://maps.google.com/?q=Heather+Park+Seal+Beach+CA" target="_blank" rel="noopener">
+                                Heather Park<br>
+                                Seal Beach, CA
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-icon">🦋</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Theme</div>
+                        <div class="detail-value">
+                            Butterflies &amp; Garden &mdash; feel free to wear your prettiest pastels!
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RSVP Section -->
+            <section class="rsvp-section">
+                <h2>💌 RSVP</h2>
+
+                <div class="guest-name-display">
+                    <div class="guest-name-label">Invitation for</div>
+                    <div id="guest-name" class="guest-name-value">Loading...</div>
+                    <div id="invited-count" class="guest-name-label" style="margin-top: 0.5rem; font-size: 1rem; color: var(--butterfly-pink-dark);"></div>
+                </div>
+
+                <p id="rsvp-status" style="text-align: center; margin-bottom: 1rem; color: var(--butterfly-teal-dark); display: none;"></p>
+
+                <div id="rsvp-form">
+                    <div class="rsvp-options">
+                        <div class="rsvp-option yes" data-value="yes">
+                            <div class="rsvp-option-icon">🎉</div>
+                            <div class="rsvp-option-label">Yes!</div>
+                        </div>
+                        <div class="rsvp-option no" data-value="no">
+                            <div class="rsvp-option-icon">😢</div>
+                            <div class="rsvp-option-label">Can't make it</div>
+                        </div>
+                        <div class="rsvp-option maybe" data-value="maybe">
+                            <div class="rsvp-option-icon">🤔</div>
+                            <div class="rsvp-option-label">Maybe</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="num-adults">Adults attending</label>
+                        <select id="num-adults">
+                            <option value="0">0 adults</option>
+                            <option value="1">1 adult</option>
+                            <option value="2">2 adults</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="num-kids">Kids attending</label>
+                        <select id="num-kids">
+                            <option value="0">0 kids</option>
+                            <option value="1">1 kid</option>
+                            <option value="2">2 kids</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guest-message">Message (optional)</label>
+                        <textarea id="guest-message" placeholder="Any dietary restrictions, questions, or just say hi!"></textarea>
+                    </div>
+
+                    <button id="submit-rsvp" class="btn-submit">Submit RSVP</button>
+                </div>
+
+                <!-- Success Message -->
+                <div id="success-message" class="success-message hidden">
+                    <div class="success-icon">🦋</div>
+                    <h3 class="success-title">RSVP Received!</h3>
+                    <p id="success-response">We can't wait to see you!</p>
+                    <p style="margin-top: 1rem; opacity: 0.7;">You can close this page or leave a birthday message below.</p>
+                </div>
+
+                <!-- RSVP Closed Message -->
+                <div id="rsvp-closed-message" class="rsvp-closed-message hidden">
+                    <div class="rsvp-closed-icon">⏰</div>
+                    <h3 class="rsvp-closed-title">RSVP Window Closed</h3>
+                    <p class="rsvp-closed-text">The RSVP window for Ariana's birthday party has now closed. Sorry we missed you! If you have any questions, please reach out to the host directly.</p>
+                    <p class="rsvp-closed-text" style="margin-top: 1rem;">We hope to see you at a future celebration!</p>
+                </div>
+            </section>
+
+            <!-- Birthday Message Section -->
+            <section class="message-section">
+                <h2>💜 Leave a Birthday Message for Ariana</h2>
+                <div class="form-group">
+                    <textarea id="birthday-message" placeholder="Write a special birthday message for Ariana..."></textarea>
+                </div>
+                <button id="submit-message" class="btn-submit" style="background: linear-gradient(135deg, var(--butterfly-teal), var(--butterfly-purple));">Send Message</button>
+            </section>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <a href="https://classmatekids.com" target="_blank" rel="noopener" class="footer-promo">
+                    <img src="../assets/appicon.png" alt="ClassMate">
+                    <span>Invitation powered by Classmate</span>
+                </a>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- Invitation Logic -->
+    <script src="invitation.js?v=1"></script>
+</body>
+</html>
