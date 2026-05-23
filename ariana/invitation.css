@@ -63,6 +63,16 @@ body {
     filter: drop-shadow(0 2px 6px rgba(128, 90, 213, 0.25));
 }
 
+/* Purple/violet variant - hue-rotate shifts the emoji toward purple */
+.butterfly-bg .butterfly.purple {
+    filter: hue-rotate(45deg) saturate(1.4) drop-shadow(0 2px 6px rgba(128, 90, 213, 0.35));
+}
+
+/* Pink variant for extra variety */
+.butterfly-bg .butterfly.pink {
+    filter: hue-rotate(-30deg) saturate(1.5) drop-shadow(0 2px 6px rgba(236, 72, 153, 0.3));
+}
+
 /* Each butterfly varies in size, start position, and animation timing */
 .butterfly-bg .butterfly:nth-child(1)  { top: 5%;  left: 6%;   font-size: 2.2rem; opacity: 0.55; animation: butterfly-float-1 14s ease-in-out infinite; }
 .butterfly-bg .butterfly:nth-child(2)  { top: 12%; right: 8%;  font-size: 1.6rem; opacity: 0.5;  animation: butterfly-float-2 18s ease-in-out infinite; }
@@ -82,6 +92,14 @@ body {
 .butterfly-bg .butterfly:nth-child(16) { top: 90%; right: 14%; font-size: 1.6rem; opacity: 0.5;  animation: butterfly-float-3 19s ease-in-out infinite reverse; }
 .butterfly-bg .butterfly:nth-child(17) { top: 95%; left: 42%;  font-size: 1.3rem; opacity: 0.4;  animation: butterfly-float-1 20s ease-in-out infinite; }
 .butterfly-bg .butterfly:nth-child(18) { top: 15%; left: 42%;  font-size: 1.4rem; opacity: 0.45; animation: butterfly-float-2 22s ease-in-out infinite reverse; }
+.butterfly-bg .butterfly:nth-child(19) { top: 10%; left: 32%;  font-size: 1.5rem; opacity: 0.5;  animation: butterfly-float-3 18s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(20) { top: 25%; right: 32%; font-size: 1.2rem; opacity: 0.4;  animation: butterfly-float-1 24s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(21) { top: 33%; right: 12%; font-size: 1.7rem; opacity: 0.55; animation: butterfly-float-2 17s ease-in-out infinite reverse; }
+.butterfly-bg .butterfly:nth-child(22) { top: 48%; left: 18%;  font-size: 1.3rem; opacity: 0.45; animation: butterfly-float-1 19s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(23) { top: 58%; left: 65%;  font-size: 1.9rem; opacity: 0.55; animation: butterfly-float-3 21s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(24) { top: 70%; right: 22%; font-size: 1.4rem; opacity: 0.5;  animation: butterfly-float-2 20s ease-in-out infinite reverse; }
+.butterfly-bg .butterfly:nth-child(25) { top: 80%; left: 35%;  font-size: 1.6rem; opacity: 0.5;  animation: butterfly-float-1 22s ease-in-out infinite; }
+.butterfly-bg .butterfly:nth-child(26) { top: 92%; right: 30%; font-size: 1.5rem; opacity: 0.45; animation: butterfly-float-3 18s ease-in-out infinite reverse; }
 
 @keyframes butterfly-float-1 {
     0%, 100% { transform: translate(0, 0) rotate(-8deg); }
