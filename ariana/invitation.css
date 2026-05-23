@@ -1,7 +1,6 @@
 /* Invitation Page Styles - Butterfly Theme */
 /* Self-contained - does not affect other pages */
-
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Dancing+Script:wght@600;700&display=swap');
+/* Fonts (Quicksand + Dancing Script) are loaded via <link> in the HTML head */
 
 :root {
     /* Butterfly Color Palette - dreamy garden */
@@ -48,9 +47,14 @@ body {
 }
 
 /* Butterfly background decorations */
+/* position:absolute (not fixed) so butterflies scroll with the page —
+   on iOS, fixed elements force per-frame repaint as the URL bar slides */
 .butterfly-bg {
-    position: fixed;
-    inset: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     pointer-events: none;
     z-index: 0;
     overflow: hidden;
@@ -132,6 +136,42 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
     .butterfly-bg .butterfly { animation: none; }
+}
+
+/* Mobile: fewer butterflies, no animation, no backdrop-filter (all expensive on phones) */
+@media (max-width: 768px) {
+    .butterfly-bg .butterfly { animation: none; }
+    /* Keep only butterflies 1, 4, 7, 10, 13, 16, 19, 22 — every 3rd, ~8 total */
+    .butterfly-bg .butterfly:nth-child(2),
+    .butterfly-bg .butterfly:nth-child(3),
+    .butterfly-bg .butterfly:nth-child(5),
+    .butterfly-bg .butterfly:nth-child(6),
+    .butterfly-bg .butterfly:nth-child(8),
+    .butterfly-bg .butterfly:nth-child(9),
+    .butterfly-bg .butterfly:nth-child(11),
+    .butterfly-bg .butterfly:nth-child(12),
+    .butterfly-bg .butterfly:nth-child(14),
+    .butterfly-bg .butterfly:nth-child(15),
+    .butterfly-bg .butterfly:nth-child(17),
+    .butterfly-bg .butterfly:nth-child(18),
+    .butterfly-bg .butterfly:nth-child(20),
+    .butterfly-bg .butterfly:nth-child(21),
+    .butterfly-bg .butterfly:nth-child(23),
+    .butterfly-bg .butterfly:nth-child(24),
+    .butterfly-bg .butterfly:nth-child(26) {
+        display: none;
+    }
+
+    .details-card,
+    .rsvp-section,
+    .message-section,
+    .gallery-section,
+    .video-section,
+    .stat-card,
+    .admin-section {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
 }
 
 .container {

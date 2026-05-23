@@ -12,8 +12,13 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/appicon.png">
 
+    <!-- Fonts (preconnect first so DNS + TLS happen in parallel with CSS) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Dancing+Script:wght@600;700&display=swap">
+
     <!-- Styles -->
-    <link rel="stylesheet" href="invitation.css?v=4">
+    <link rel="stylesheet" href="invitation.css?v=5">
 </head>
 <body>
     <!-- Floating butterflies in the background -->
@@ -79,10 +84,16 @@
                 <h2>🦋 Our Birthday Girl</h2>
                 <div class="photo-gallery">
                     <div class="photo-frame">
-                        <img src="photo3.jpg" alt="Ariana">
+                        <picture>
+                            <source srcset="photo3.webp" type="image/webp">
+                            <img src="photo3.jpg?v=4" alt="Ariana" width="667" height="1000" fetchpriority="high" decoding="async">
+                        </picture>
                     </div>
                     <div class="photo-frame">
-                        <img src="photo2.jpg?v=3" alt="Ariana feeding kangaroos">
+                        <picture>
+                            <source srcset="photo2.webp" type="image/webp">
+                            <img src="photo2.jpg?v=4" alt="Ariana feeding kangaroos" width="750" height="1000" loading="lazy" decoding="async">
+                        </picture>
                     </div>
                 </div>
             </section>
