@@ -138,29 +138,10 @@ body {
     .butterfly-bg .butterfly { animation: none; }
 }
 
-/* Mobile: fewer butterflies, no animation, no backdrop-filter (all expensive on phones) */
+/* Mobile: keep all butterflies but disable animations + backdrop-filter
+   (those were the expensive bits, not the count of static emojis) */
 @media (max-width: 768px) {
     .butterfly-bg .butterfly { animation: none; }
-    /* Keep only butterflies 1, 4, 7, 10, 13, 16, 19, 22 — every 3rd, ~8 total */
-    .butterfly-bg .butterfly:nth-child(2),
-    .butterfly-bg .butterfly:nth-child(3),
-    .butterfly-bg .butterfly:nth-child(5),
-    .butterfly-bg .butterfly:nth-child(6),
-    .butterfly-bg .butterfly:nth-child(8),
-    .butterfly-bg .butterfly:nth-child(9),
-    .butterfly-bg .butterfly:nth-child(11),
-    .butterfly-bg .butterfly:nth-child(12),
-    .butterfly-bg .butterfly:nth-child(14),
-    .butterfly-bg .butterfly:nth-child(15),
-    .butterfly-bg .butterfly:nth-child(17),
-    .butterfly-bg .butterfly:nth-child(18),
-    .butterfly-bg .butterfly:nth-child(20),
-    .butterfly-bg .butterfly:nth-child(21),
-    .butterfly-bg .butterfly:nth-child(23),
-    .butterfly-bg .butterfly:nth-child(24),
-    .butterfly-bg .butterfly:nth-child(26) {
-        display: none;
-    }
 
     .details-card,
     .rsvp-section,
