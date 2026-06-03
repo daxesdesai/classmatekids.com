@@ -114,9 +114,9 @@
                 </div>
             </div>
 
-            <!-- Create New Invite -->
+            <!-- Create / Edit Invite -->
             <section class="admin-section">
-                <h2>➕ Create New Invite</h2>
+                <h2 id="invite-form-title">➕ Create New Invite</h2>
                 <div class="create-invite-form">
                     <div class="form-group">
                         <label for="new-guest-name">Guest/Family Name</label>
@@ -150,6 +150,7 @@
                         <label for="new-show-count" style="margin: 0; cursor: pointer;">Show invited count to guest</label>
                     </div>
                     <button id="create-invite-btn" class="btn-create">Create Invite</button>
+                    <button id="cancel-edit-btn" class="btn-copy hidden" style="margin-left: 0.5rem;">Cancel</button>
                 </div>
                 <div class="invite-link-container hidden">
                     <input type="text" id="new-invite-link" class="invite-link-input" readonly>
@@ -235,6 +236,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <!-- Invitation Logic -->
-    <script src="invitation.js?v=1"></script>
+    <script src="invitation.js?v=2"></script>
 </body>
 </html>

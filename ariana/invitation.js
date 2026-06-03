@@ -255,6 +255,23 @@ async function deleteInvite(inviteId) {
     }
 }
 
+async function updateInvite(inviteId, guestName, maxAdults, maxKids, showInvitedCount) {
+    if (!isFirebaseReady || !inviteId) return false;
+
+    try {
+        await db.ref(`events/${EVENT_ID}/invites/${inviteId}`).update({
+            guestName: guestName.trim(),
+            maxAdults: parseInt(maxAdults) || 2,
+            maxKids: parseInt(maxKids) || 0,
+            showInvitedCount: showInvitedCount !== false
+        });
+        return true;
+    } catch (error) {
+        console.error('Error updating invite:', error);
+        return false;
+    }
+}
+
 // ============================================
 // UI HELPERS
 // ============================================
@@ -672,7 +689,12 @@ function renderAdminStats(invites, rsvps, views) {
     setElementText('stat-kids', totalKids);
 }
 
+// Cache of latest invites so the Edit button can pre-fill the form
+let cachedInvitesMap = {};
+let editingInviteId = null;
+
 function renderGuestTable(invites, rsvps, views) {
+    cachedInvitesMap = invites;
     const tbody = document.getElementById('guest-table-body');
     if (!tbody) return;
 
@@ -701,8 +723,9 @@ function renderGuestTable(invites, rsvps, views) {
             <td>${adultsText}</td>
             <td>${kidsText}</td>
             <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${rsvp?.message || ''}">${rsvp?.message || '-'}</td>
-            <td>
-                <button class="btn-copy" onclick="copyToClipboard('${generateInviteUrl(inviteId)}')" style="padding: 4px 8px; font-size: 0.75rem;">Copy Link</button>
+            <td style="white-space: nowrap;">
+                <button class="btn-copy" onclick="copyToClipboard('${generateInviteUrl(inviteId)}')" style="padding: 4px 8px; font-size: 0.75rem;">Copy</button>
+                <button class="btn-copy" onclick="startEditInvite('${inviteId}')" style="padding: 4px 8px; font-size: 0.75rem; margin-left: 4px;">Edit</button>
             </td>
         `;
 
@@ -772,6 +795,22 @@ function setupAdminForms() {
                 return;
             }
 
+            // Edit mode: update the existing invite in place (URL stays the same)
+            if (editingInviteId) {
+                createBtn.disabled = true;
+                createBtn.textContent = 'Saving...';
+
+                const success = await updateInvite(editingInviteId, guestName, maxAdults, maxKids, showInvitedCount);
+                if (success) {
+                    cancelEdit();
+                } else {
+                    alert('Error saving changes. Please try again.');
+                    createBtn.disabled = false;
+                    createBtn.textContent = 'Save Changes';
+                }
+                return;
+            }
+
             createBtn.disabled = true;
             createBtn.textContent = 'Creating...';
 
@@ -811,6 +850,65 @@ function setupAdminForms() {
             }
         });
     }
+
+    const cancelBtn = document.getElementById('cancel-edit-btn');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => cancelEdit());
+    }
+}
+
+function startEditInvite(inviteId) {
+    const invite = cachedInvitesMap[inviteId];
+    if (!invite) {
+        alert('Could not find this invite. Try refreshing the page.');
+        return;
+    }
+
+    editingInviteId = inviteId;
+
+    document.getElementById('new-guest-name').value = invite.guestName || '';
+    document.getElementById('new-max-adults').value = invite.maxAdults || 2;
+    document.getElementById('new-max-kids').value = invite.maxKids || 0;
+    document.getElementById('new-show-count').checked = invite.showInvitedCount !== false;
+
+    const title = document.getElementById('invite-form-title');
+    if (title) title.textContent = "Editing: " + (invite.guestName || '');
+
+    const createBtn = document.getElementById('create-invite-btn');
+    if (createBtn) {
+        createBtn.textContent = 'Save Changes';
+        createBtn.disabled = false;
+    }
+
+    const cancelBtn = document.getElementById('cancel-edit-btn');
+    if (cancelBtn) cancelBtn.classList.remove('hidden');
+
+    // Hide the previously-shown new-invite link (from a prior create)
+    const linkContainer = document.querySelector('.invite-link-container');
+    if (linkContainer) linkContainer.classList.add('hidden');
+
+    document.querySelector('.create-invite-form')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function cancelEdit() {
+    editingInviteId = null;
+
+    document.getElementById('new-guest-name').value = '';
+    document.getElementById('new-max-adults').value = 2;
+    document.getElementById('new-max-kids').value = 2;
+    document.getElementById('new-show-count').checked = true;
+
+    const title = document.getElementById('invite-form-title');
+    if (title) title.textContent = "➕ Create New Invite";
+
+    const createBtn = document.getElementById('create-invite-btn');
+    if (createBtn) {
+        createBtn.textContent = 'Create Invite';
+        createBtn.disabled = false;
+    }
+
+    const cancelBtn = document.getElementById('cancel-edit-btn');
+    if (cancelBtn) cancelBtn.classList.add('hidden');
 }
 
 // ============================================
