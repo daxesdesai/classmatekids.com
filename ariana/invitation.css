@@ -279,15 +279,21 @@ body {
 
 /* Testimonial Video */
 .video-container {
-    margin: var(--spacing-lg) 0;
+    margin: var(--spacing-lg) auto;
+    max-width: 360px;
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: 0 10px 40px rgba(128, 90, 213, 0.25);
-    background: #ffffff;
+    background: #000;
     border: 3px solid #ffffff;
 }
 
-.video-container video,
+.video-container video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
 .video-container iframe {
     width: 100%;
     display: block;

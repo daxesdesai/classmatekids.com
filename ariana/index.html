@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Dancing+Script:wght@600;700&display=swap">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="invitation.css?v=9">
+    <link rel="stylesheet" href="invitation.css?v=10">
 </head>
 <body>
     <!-- Floating butterflies in the background -->
@@ -99,18 +99,13 @@
             </section>
 
             <!-- Testimonial Video -->
-            <!-- TODO: Replace the placeholder with one of:
-                 (a) <video controls poster="video-poster.jpg"><source src="testimonial.mp4" type="video/mp4"></video>
-                 (b) <iframe src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
-            -->
             <section class="video-section">
                 <h2>💜 A Special Message</h2>
                 <div class="video-container">
-                    <div class="video-placeholder">
-                        <div class="icon">🎬</div>
-                        <div><strong>Video coming soon</strong></div>
-                        <div style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">A heartfelt message from Ariana will appear here.</div>
-                    </div>
+                    <video controls preload="metadata" playsinline poster="testimonial-poster.jpg" width="720" height="1280">
+                        <source src="testimonial.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
             </section>
 
