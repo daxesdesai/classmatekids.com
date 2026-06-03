@@ -331,11 +331,27 @@ body {
     text-decoration: none;
 }
 
+.donation-currency-note {
+    font-size: 0.9rem;
+    color: var(--butterfly-ink);
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    margin-top: var(--spacing-md) !important;
+    margin-bottom: 0 !important;
+    line-height: 1.5;
+}
+
+.donation-currency-note a {
+    color: var(--butterfly-purple-dark);
+    font-weight: 600;
+}
+
 .donation-note-hint {
     font-size: 0.9rem;
     color: var(--butterfly-ink-soft);
     font-style: italic;
-    margin-top: var(--spacing-md);
+    margin-top: var(--spacing-sm) !important;
     margin-bottom: 0 !important;
 }
 
