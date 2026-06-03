@@ -278,6 +278,67 @@ body {
 }
 
 /* Testimonial Video */
+/* Donation note (no-gifts message above the video) */
+.donation-note {
+    background: linear-gradient(135deg, rgba(255, 126, 185, 0.12), rgba(94, 234, 212, 0.12));
+    border: 2px dashed var(--butterfly-purple-dark);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.donation-note-icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.donation-note h3 {
+    color: var(--butterfly-purple-dark);
+    font-size: 1.4rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.donation-note p {
+    color: var(--butterfly-ink);
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.5;
+}
+
+.donation-note p.no-gifts {
+    font-size: 1.05rem;
+    color: var(--butterfly-pink-dark);
+    margin-top: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.donation-button {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--butterfly-pink), var(--butterfly-purple));
+    color: #ffffff;
+    padding: 0.75rem 1.75rem;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 6px 18px rgba(236, 72, 153, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.donation-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(236, 72, 153, 0.4);
+    text-decoration: none;
+}
+
+.donation-note-hint {
+    font-size: 0.9rem;
+    color: var(--butterfly-ink-soft);
+    font-style: italic;
+    margin-top: var(--spacing-md);
+    margin-bottom: 0 !important;
+}
+
 .video-container {
     margin: var(--spacing-lg) auto;
     max-width: 360px;
