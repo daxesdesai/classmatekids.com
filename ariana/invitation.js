@@ -114,6 +114,31 @@ async function loadAllViews() {
     }
 }
 
+async function recordDonationClick(inviteId) {
+    if (!isFirebaseReady || !inviteId) return;
+
+    try {
+        await db.ref(`events/${EVENT_ID}/donationClicks/${inviteId}`).set({
+            clickedAt: firebase.database.ServerValue.TIMESTAMP,
+            clickCount: firebase.database.ServerValue.increment(1)
+        });
+    } catch (error) {
+        console.error('Error recording donation click:', error);
+    }
+}
+
+async function loadAllDonationClicks() {
+    if (!isFirebaseReady) return {};
+
+    try {
+        const snapshot = await db.ref(`events/${EVENT_ID}/donationClicks`).once('value');
+        return snapshot.val() || {};
+    } catch (error) {
+        console.error('Error loading donation clicks:', error);
+        return {};
+    }
+}
+
 async function submitRsvp(inviteId, rsvpData) {
     if (!isFirebaseReady || !inviteId) return false;
 
@@ -408,6 +433,17 @@ async function initGuestPage() {
     }
 
     setupRsvpForm(inviteId, invite.guestName);
+
+    setupDonationTracking(inviteId);
+}
+
+function setupDonationTracking(inviteId) {
+    const donateBtn = document.querySelector('.donation-button');
+    if (!donateBtn || !inviteId) return;
+    donateBtn.addEventListener('click', () => {
+        // Fire and forget — link opens in new tab so the request has time to complete
+        recordDonationClick(inviteId);
+    });
 }
 
 function populateAdultsDropdown(maxAdults) {
@@ -623,15 +659,16 @@ async function initAdminPage() {
 }
 
 async function refreshAdminData() {
-    const [invites, rsvps, messages, views] = await Promise.all([
+    const [invites, rsvps, messages, views, donations] = await Promise.all([
         loadAllInvites(),
         loadAllRsvps(),
         loadAllMessages(),
-        loadAllViews()
+        loadAllViews(),
+        loadAllDonationClicks()
     ]);
 
-    renderAdminStats(invites, rsvps, views);
-    renderGuestTable(invites, rsvps, views);
+    renderAdminStats(invites, rsvps, views, donations);
+    renderGuestTable(invites, rsvps, views, donations);
     renderMessages(messages, invites);
 }
 
@@ -656,12 +693,16 @@ function loadDemoAdminData() {
         'msg1': { inviteId: 'smith-family-abc123', guestName: 'Smith Family', text: 'Happy birthday Ariana!', createdAt: Date.now() }
     };
 
-    renderAdminStats(demoInvites, demoRsvps, demoViews);
-    renderGuestTable(demoInvites, demoRsvps, demoViews);
+    const demoDonations = {
+        'smith-family-abc123': { clickedAt: Date.now(), clickCount: 1 }
+    };
+
+    renderAdminStats(demoInvites, demoRsvps, demoViews, demoDonations);
+    renderGuestTable(demoInvites, demoRsvps, demoViews, demoDonations);
     renderMessages(demoMessages, demoInvites);
 }
 
-function renderAdminStats(invites, rsvps, views) {
+function renderAdminStats(invites, rsvps, views, donations) {
     const inviteIds = Object.keys(invites);
     const rsvpData = Object.values(rsvps);
 
@@ -679,6 +720,8 @@ function renderAdminStats(invites, rsvps, views) {
         .filter(r => r.attending === 'yes')
         .reduce((sum, r) => sum + (r.numKids || 0), 0);
 
+    const donationClickerCount = donations ? Object.keys(donations).length : 0;
+
     setElementText('stat-total', totalInvites);
     setElementText('stat-viewed', viewedCount);
     setElementText('stat-yes', yesCount);
@@ -687,13 +730,14 @@ function renderAdminStats(invites, rsvps, views) {
     setElementText('stat-pending', pendingCount);
     setElementText('stat-adults', totalAdults);
     setElementText('stat-kids', totalKids);
+    setElementText('stat-donations', donationClickerCount);
 }
 
 // Cache of latest invites so the Edit button can pre-fill the form
 let cachedInvitesMap = {};
 let editingInviteId = null;
 
-function renderGuestTable(invites, rsvps, views) {
+function renderGuestTable(invites, rsvps, views, donations) {
     cachedInvitesMap = invites;
     const tbody = document.getElementById('guest-table-body');
     if (!tbody) return;
@@ -703,6 +747,7 @@ function renderGuestTable(invites, rsvps, views) {
     Object.entries(invites).forEach(([inviteId, invite]) => {
         const rsvp = rsvps[inviteId];
         const view = views ? views[inviteId] : null;
+        const donation = donations ? donations[inviteId] : null;
         const row = document.createElement('tr');
 
         const status = rsvp ? rsvp.attending : 'pending';
@@ -710,6 +755,13 @@ function renderGuestTable(invites, rsvps, views) {
         const statusText = status.charAt(0).toUpperCase() + status.slice(1);
         const viewedText = view ? '👁 Viewed' : 'Not viewed';
         const viewedStyle = view ? 'color: var(--butterfly-teal-dark);' : 'color: var(--butterfly-ink-soft); opacity: 0.6;';
+
+        const donationText = donation
+            ? (donation.clickCount && donation.clickCount > 1 ? `💜 ${donation.clickCount}×` : '💜 Yes')
+            : '—';
+        const donationStyle = donation
+            ? 'color: var(--butterfly-purple-dark); font-weight: 600;'
+            : 'color: var(--butterfly-ink-soft); opacity: 0.6;';
 
         const maxAdults = invite.maxAdults || 2;
         const maxKids = invite.maxKids || 0;
@@ -722,6 +774,7 @@ function renderGuestTable(invites, rsvps, views) {
             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
             <td>${adultsText}</td>
             <td>${kidsText}</td>
+            <td><span style="${donationStyle} font-size: 0.8rem;">${donationText}</span></td>
             <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${rsvp?.message || ''}">${rsvp?.message || '-'}</td>
             <td style="white-space: nowrap;">
                 <button class="btn-copy" onclick="copyToClipboard('${generateInviteUrl(inviteId)}')" style="padding: 4px 8px; font-size: 0.75rem;">Copy</button>
@@ -733,7 +786,7 @@ function renderGuestTable(invites, rsvps, views) {
     });
 
     if (Object.keys(invites).length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; opacity: 0.5;">No invites created yet</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; opacity: 0.5;">No invites created yet</td></tr>';
     }
 }
 
@@ -771,6 +824,7 @@ function setupRealtimeListeners() {
     db.ref(`events/${EVENT_ID}/rsvps`).on('value', () => refreshAdminData());
     db.ref(`events/${EVENT_ID}/messages`).on('value', () => refreshAdminData());
     db.ref(`events/${EVENT_ID}/views`).on('value', () => refreshAdminData());
+    db.ref(`events/${EVENT_ID}/donationClicks`).on('value', () => refreshAdminData());
 
     db.ref(`events/${EVENT_ID}/invites/_settings/rsvpClosed`).on('value', () => refreshRsvpToggle());
 }
