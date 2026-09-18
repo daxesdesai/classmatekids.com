@@ -676,7 +676,6 @@ function renderGuestTable(invites, rsvps, views) {
             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
             <td>${adultsText}</td>
             <td>${kidsText}</td>
-            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${rsvp?.message || ''}">${rsvp?.message || '-'}</td>
             <td style="white-space: nowrap;">
                 <button class="btn-copy" onclick="copyToClipboard('${generateInviteUrl(inviteId)}')" style="padding: 4px 8px; font-size: 0.75rem;">Copy</button>
                 <button class="btn-copy" onclick="startEditInvite('${inviteId}')" style="padding: 4px 8px; font-size: 0.75rem; margin-left: 4px;">Edit</button>
@@ -687,7 +686,7 @@ function renderGuestTable(invites, rsvps, views) {
     });
 
     if (Object.keys(invites).length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; opacity: 0.5;">No invites created yet</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; opacity: 0.5;">No invites created yet</td></tr>';
     }
 }
 
