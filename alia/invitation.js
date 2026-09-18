@@ -129,24 +129,6 @@ async function submitRsvp(inviteId, rsvpData) {
     }
 }
 
-async function submitMessage(inviteId, guestName, messageText) {
-    if (!isFirebaseReady || !inviteId || !messageText.trim()) return false;
-
-    try {
-        const newMessageRef = db.ref(`events/${EVENT_ID}/messages`).push();
-        await newMessageRef.set({
-            inviteId: inviteId,
-            guestName: guestName,
-            text: messageText.trim(),
-            createdAt: firebase.database.ServerValue.TIMESTAMP
-        });
-        return true;
-    } catch (error) {
-        console.error('Error submitting message:', error);
-        return false;
-    }
-}
-
 // ============================================
 // RSVP STATUS (OPEN/CLOSED)
 // ============================================
@@ -201,18 +183,6 @@ async function loadAllRsvps() {
         return snapshot.val() || {};
     } catch (error) {
         console.error('Error loading RSVPs:', error);
-        return {};
-    }
-}
-
-async function loadAllMessages() {
-    if (!isFirebaseReady) return {};
-
-    try {
-        const snapshot = await db.ref(`events/${EVENT_ID}/messages`).once('value');
-        return snapshot.val() || {};
-    } catch (error) {
-        console.error('Error loading messages:', error);
         return {};
     }
 }
@@ -547,39 +517,6 @@ function setupRsvpForm(inviteId, guestName) {
             }
         });
     }
-
-    const messageBtn = document.getElementById('submit-message');
-    if (messageBtn) {
-        messageBtn.addEventListener('click', async () => {
-            const messageInput = document.getElementById('birthday-message');
-            const messageText = messageInput?.value || '';
-
-            if (!messageText.trim()) {
-                alert('Please enter a message');
-                return;
-            }
-
-            messageBtn.disabled = true;
-            messageBtn.textContent = 'Sending...';
-
-            if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
-                const success = await submitMessage(inviteId, guestName, messageText);
-                if (!success) {
-                    alert('There was an error sending your message. Please try again.');
-                    messageBtn.disabled = false;
-                    messageBtn.textContent = 'Send Message';
-                    return;
-                }
-            }
-
-            messageInput.value = '';
-            messageBtn.textContent = 'Message Sent!';
-            setTimeout(() => {
-                messageBtn.disabled = false;
-                messageBtn.textContent = 'Send Message';
-            }, 2000);
-        });
-    }
 }
 
 // ============================================
@@ -623,16 +560,15 @@ async function initAdminPage() {
 }
 
 async function refreshAdminData() {
-    const [invites, rsvps, messages, views] = await Promise.all([
+    const [invites, rsvps, views] = await Promise.all([
         loadAllInvites(),
         loadAllRsvps(),
-        loadAllMessages(),
         loadAllViews()
     ]);
 
     renderAdminStats(invites, rsvps, views);
     renderGuestTable(invites, rsvps, views);
-    renderMessages(messages, invites);
+    renderMessages(rsvps, invites);
 }
 
 function loadDemoAdminData() {
@@ -652,13 +588,9 @@ function loadDemoAdminData() {
         'johnson-xyz789': { viewedAt: Date.now(), viewCount: 1 }
     };
 
-    const demoMessages = {
-        'msg1': { inviteId: 'smith-family-abc123', guestName: 'Smith Family', text: 'Happy birthday Alia!', createdAt: Date.now() }
-    };
-
     renderAdminStats(demoInvites, demoRsvps, demoViews);
     renderGuestTable(demoInvites, demoRsvps, demoViews);
-    renderMessages(demoMessages, demoInvites);
+    renderMessages(demoRsvps, demoInvites);
 }
 
 function renderAdminStats(invites, rsvps, views) {
@@ -737,14 +669,21 @@ function renderGuestTable(invites, rsvps, views) {
     }
 }
 
-function renderMessages(messages, invites) {
+function renderMessages(rsvps, invites) {
     const container = document.getElementById('messages-list');
     if (!container) return;
 
     container.innerHTML = '';
 
-    const messageArray = Object.entries(messages)
-        .map(([id, msg]) => ({ id, ...msg }))
+    // Birthday messages are submitted as part of the RSVP
+    const messageArray = Object.entries(rsvps)
+        .filter(([, rsvp]) => rsvp.message && rsvp.message.trim())
+        .map(([inviteId, rsvp]) => ({
+            guestName: invites[inviteId]?.guestName || inviteId,
+            text: rsvp.message.trim(),
+            attending: rsvp.attending,
+            createdAt: rsvp.updatedAt
+        }))
         .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
     if (messageArray.length === 0) {
@@ -756,7 +695,7 @@ function renderMessages(messages, invites) {
         const div = document.createElement('div');
         div.className = 'message-item';
         div.innerHTML = `
-            <div class="message-author">${msg.guestName}</div>
+            <div class="message-author">${msg.guestName} <span class="status-badge ${msg.attending || 'pending'}" style="margin-left: 6px;">${msg.attending || ''}</span></div>
             <div class="message-text">"${msg.text}"</div>
             <div class="message-time">${formatTimestamp(msg.createdAt)}</div>
         `;
@@ -769,7 +708,6 @@ function setupRealtimeListeners() {
 
     db.ref(`events/${EVENT_ID}/invites`).on('value', () => refreshAdminData());
     db.ref(`events/${EVENT_ID}/rsvps`).on('value', () => refreshAdminData());
-    db.ref(`events/${EVENT_ID}/messages`).on('value', () => refreshAdminData());
     db.ref(`events/${EVENT_ID}/views`).on('value', () => refreshAdminData());
 
     db.ref(`events/${EVENT_ID}/invites/_settings/rsvpClosed`).on('value', () => refreshRsvpToggle());

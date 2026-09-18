@@ -116,7 +116,7 @@
                 <span class="hero-badge">🫧 You're Invited! 🫧</span>
                 <h1 class="hero-title">Alia's 10th Birthday</h1>
                 <p class="hero-subtitle">Slime &amp; Squishy Party</p>
-                <p class="hero-date">Saturday, October 31, 2026</p>
+                <p class="hero-date">Saturday, October 17, 2026</p>
             </div>
             <!-- Slime drip divider -->
             <svg class="slime-drip" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true">
@@ -146,7 +146,7 @@
                     <div class="detail-icon">📅</div>
                     <div class="detail-content">
                         <div class="detail-label">Date</div>
-                        <div class="detail-value">Saturday, October 31, 2026</div>
+                        <div class="detail-value">Saturday, October 17, 2026</div>
                     </div>
                 </div>
 
@@ -229,9 +229,9 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="guest-message">Message (optional)</label>
-                        <textarea id="guest-message" placeholder="Any dietary restrictions, questions, or just say hi!"></textarea>
+                    <div class="form-group birthday-message-group">
+                        <label for="guest-message" class="birthday-message-label">💜 Leave a Birthday Message for Alia <span class="optional">(optional)</span></label>
+                        <textarea id="guest-message" placeholder="Write a special birthday message for Alia, or share any questions or dietary notes..."></textarea>
                     </div>
 
                     <button id="submit-rsvp" class="btn-submit">Submit RSVP</button>
@@ -242,7 +242,7 @@
                     <div class="success-icon">🫧</div>
                     <h3 class="success-title">RSVP Received!</h3>
                     <p id="success-response">We can't wait to see you!</p>
-                    <p style="margin-top: 1rem; opacity: 0.7;">You can close this page or leave a birthday message below.</p>
+                    <p style="margin-top: 1rem; opacity: 0.7;">You can come back to this link anytime to update your response.</p>
                 </div>
 
                 <!-- RSVP Closed Message -->
@@ -252,15 +252,6 @@
                     <p class="rsvp-closed-text">The RSVP window for Alia's birthday party has now closed. Sorry we missed you! If you have any questions, please reach out to the host directly.</p>
                     <p class="rsvp-closed-text" style="margin-top: 1rem;">We hope to see you at a future celebration!</p>
                 </div>
-            </section>
-
-            <!-- Birthday Message Section -->
-            <section class="message-section">
-                <h2>💜 Leave a Birthday Message for Alia</h2>
-                <div class="form-group">
-                    <textarea id="birthday-message" placeholder="Write a special birthday message for Alia..."></textarea>
-                </div>
-                <button id="submit-message" class="btn-submit" style="background: linear-gradient(135deg, var(--slime-mint), var(--slime-lavender));">Send Message</button>
             </section>
 
             <!-- Footer -->
@@ -278,6 +269,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <!-- Invitation Logic -->
-    <script src="invitation.js?v=1"></script>
+    <script src="invitation.js?v=2"></script>
 </body>
 </html>

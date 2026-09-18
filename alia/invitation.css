@@ -206,7 +206,6 @@ body {
     .details-card,
     .rsvp-section,
     .message-section,
-    .gallery-section,
     .stat-card,
     .admin-section {
         backdrop-filter: none;
@@ -310,7 +309,7 @@ body {
    PHOTO
    ======================================== */
 .photo-gallery {
-    margin: var(--spacing-lg) auto;
+    margin: var(--spacing-sm) auto 0;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: var(--spacing-sm);
@@ -334,12 +333,12 @@ body {
 .photo-frame.portrait {
     aspect-ratio: 3 / 4;
     width: 100%;
-    max-width: 380px;
+    max-width: 480px;
     border-radius: 34px;
     border: none;
     padding: 6px;
     background: linear-gradient(135deg, var(--slime-lavender), var(--slime-lavender-dark) 55%, var(--slime-mint));
-    box-shadow: 0 14px 36px rgba(124, 58, 237, 0.28), 0 0 0 6px rgba(255, 255, 255, 0.85);
+    box-shadow: 0 14px 36px rgba(124, 58, 237, 0.28);
 }
 
 .photo-frame.portrait img {
@@ -358,8 +357,7 @@ body {
    ======================================== */
 .details-card,
 .rsvp-section,
-.message-section,
-.gallery-section {
+.message-section {
     background: rgba(255, 255, 255, 0.72);
     backdrop-filter: blur(10px);
     border-radius: var(--radius-lg);
@@ -381,7 +379,8 @@ body {
 }
 
 .gallery-section {
-    border: 1px solid rgba(196, 181, 253, 0.4);
+    margin: var(--spacing-lg) 0;
+    text-align: center;
 }
 
 .details-card h2,
@@ -532,6 +531,26 @@ body {
     font-weight: 600;
     font-size: 1rem;
     color: var(--slime-ink);
+}
+
+/* Birthday message inside the RSVP form */
+.birthday-message-group {
+    background: linear-gradient(135deg, rgba(196, 181, 253, 0.16), rgba(167, 243, 208, 0.14));
+    border: 1px solid rgba(196, 181, 253, 0.5);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+}
+
+.birthday-message-label {
+    font-size: 1.1rem !important;
+    color: var(--slime-lavender-dark) !important;
+    text-align: center;
+}
+
+.birthday-message-label .optional {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--slime-ink-soft);
 }
 
 /* Form Elements */
