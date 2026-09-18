@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alia's 10th Birthday Party!</title>
+    <meta name="description" content="You're invited to Alia's 10th Birthday Party - Slime & Squishy Theme!">
+
+    <!-- Prevent search indexing for private invitation -->
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/appicon.png">
+
+    <!-- Fonts (preconnect first so DNS + TLS happen in parallel with CSS) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fredoka:wght@600;700&display=swap">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="invitation.css?v=1">
+</head>
+<body>
+    <!-- Floating slime blobs and squishies in the background -->
+    <div class="slime-bg" aria-hidden="true">
+        <span class="blob lavender"></span>
+        <span class="blob mint"></span>
+        <span class="blob pink"></span>
+        <span class="blob lavender"></span>
+        <span class="blob mint"></span>
+        <span class="blob lavender"></span>
+        <span class="blob pink"></span>
+        <span class="blob lavender"></span>
+        <span class="blob mint"></span>
+        <span class="blob lavender"></span>
+        <span class="blob pink"></span>
+        <span class="blob lavender"></span>
+        <span class="squishy">🫧</span>
+        <span class="squishy">🧸</span>
+        <span class="squishy">🫧</span>
+        <span class="squishy">🍡</span>
+        <span class="squishy">💜</span>
+        <span class="squishy">🫧</span>
+        <span class="squishy">🧸</span>
+        <span class="squishy">🫧</span>
+        <span class="squishy">💜</span>
+        <span class="squishy">🍡</span>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="loading">
+        <div class="container">
+            <div class="loading-spinner"></div>
+            <p>Loading your invitation...</p>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div id="error-container" class="error-container hidden">
+        <div class="container">
+            <div class="error-icon">😕</div>
+            <h1 id="error-title" class="error-title">Oops!</h1>
+            <p id="error-message" class="error-message">Something went wrong.</p>
+        </div>
+    </div>
+
+    <!-- Main Invitation Content -->
+    <div id="invitation-content" class="hidden">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <span class="hero-badge">🫧 You're Invited! 🫧</span>
+                <h1 class="hero-title">Alia's 10th Birthday</h1>
+                <p class="hero-subtitle">Slime &amp; Squishy Party</p>
+                <p class="hero-date">Saturday, October 31, 2026</p>
+            </div>
+            <!-- Slime drip divider -->
+            <svg class="slime-drip" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0,0 L1200,0 L1200,30 C1150,30 1140,70 1100,70 C1060,70 1060,30 1020,30 C980,30 990,85 940,85 C890,85 900,30 850,30 C800,30 810,60 770,60 C730,60 730,30 690,30 C650,30 660,80 610,80 C560,80 570,30 520,30 C470,30 480,55 440,55 C400,55 400,30 360,30 C320,30 330,75 280,75 C230,75 240,30 190,30 C140,30 150,65 100,65 C60,65 50,30 0,30 Z" />
+            </svg>
+        </section>
+
+        <div class="container">
+            <!-- Photo -->
+            <section class="gallery-section">
+                <h2>💜 Our Birthday Girl</h2>
+                <div class="photo-gallery single">
+                    <div class="photo-frame portrait">
+                        <picture>
+                            <source srcset="photo1.webp" type="image/webp">
+                            <img src="photo1.jpg?v=1" alt="Alia" width="1050" height="1400" fetchpriority="high" decoding="async">
+                        </picture>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Party Details -->
+            <section class="details-card">
+                <h2>📍 Party Details</h2>
+
+                <div class="detail-row">
+                    <div class="detail-icon">📅</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Date</div>
+                        <div class="detail-value">Saturday, October 31, 2026</div>
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-icon">⏰</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Time</div>
+                        <div class="detail-value">12:00 PM</div>
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-icon">📍</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Location</div>
+                        <div class="detail-value">
+                            <a href="https://maps.google.com/?q=19101+Alphington+Ave+Cerritos+CA+90703" target="_blank" rel="noopener">
+                                Shadow Park Clubhouse<br>
+                                19101 Alphington Ave<br>
+                                Cerritos, CA 90703
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-icon">🫧</div>
+                    <div class="detail-content">
+                        <div class="detail-label">Theme</div>
+                        <div class="detail-value">
+                            Slime &amp; Squishies! Get ready to <strong>make your own slime</strong> and squish, stretch, and play. 🧸
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RSVP Section -->
+            <section class="rsvp-section">
+                <h2>💌 RSVP</h2>
+
+                <div class="guest-name-display">
+                    <div class="guest-name-label">Invitation for</div>
+                    <div id="guest-name" class="guest-name-value">Loading...</div>
+                    <div id="invited-count" class="guest-name-label" style="margin-top: 0.5rem; font-size: 1rem; color: var(--slime-lavender-dark);"></div>
+                </div>
+
+                <p id="rsvp-status" style="text-align: center; margin-bottom: 1rem; color: var(--slime-mint-dark); display: none;"></p>
+
+                <div id="rsvp-form">
+                    <div class="rsvp-options">
+                        <div class="rsvp-option yes" data-value="yes">
+                            <div class="rsvp-option-icon">🎉</div>
+                            <div class="rsvp-option-label">Yes!</div>
+                        </div>
+                        <div class="rsvp-option no" data-value="no">
+                            <div class="rsvp-option-icon">😢</div>
+                            <div class="rsvp-option-label">Can't make it</div>
+                        </div>
+                        <div class="rsvp-option maybe" data-value="maybe">
+                            <div class="rsvp-option-icon">🤔</div>
+                            <div class="rsvp-option-label">Maybe</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="num-adults">Adults attending</label>
+                        <select id="num-adults">
+                            <option value="0">0 adults</option>
+                            <option value="1">1 adult</option>
+                            <option value="2">2 adults</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="num-kids">Kids attending</label>
+                        <select id="num-kids">
+                            <option value="0">0 kids</option>
+                            <option value="1">1 kid</option>
+                            <option value="2">2 kids</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guest-message">Message (optional)</label>
+                        <textarea id="guest-message" placeholder="Any dietary restrictions, questions, or just say hi!"></textarea>
+                    </div>
+
+                    <button id="submit-rsvp" class="btn-submit">Submit RSVP</button>
+                </div>
+
+                <!-- Success Message -->
+                <div id="success-message" class="success-message hidden">
+                    <div class="success-icon">🫧</div>
+                    <h3 class="success-title">RSVP Received!</h3>
+                    <p id="success-response">We can't wait to see you!</p>
+                    <p style="margin-top: 1rem; opacity: 0.7;">You can close this page or leave a birthday message below.</p>
+                </div>
+
+                <!-- RSVP Closed Message -->
+                <div id="rsvp-closed-message" class="rsvp-closed-message hidden">
+                    <div class="rsvp-closed-icon">⏰</div>
+                    <h3 class="rsvp-closed-title">RSVP Window Closed</h3>
+                    <p class="rsvp-closed-text">The RSVP window for Alia's birthday party has now closed. Sorry we missed you! If you have any questions, please reach out to the host directly.</p>
+                    <p class="rsvp-closed-text" style="margin-top: 1rem;">We hope to see you at a future celebration!</p>
+                </div>
+            </section>
+
+            <!-- Birthday Message Section -->
+            <section class="message-section">
+                <h2>💜 Leave a Birthday Message for Alia</h2>
+                <div class="form-group">
+                    <textarea id="birthday-message" placeholder="Write a special birthday message for Alia..."></textarea>
+                </div>
+                <button id="submit-message" class="btn-submit" style="background: linear-gradient(135deg, var(--slime-mint), var(--slime-lavender));">Send Message</button>
+            </section>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <a href="https://classmatekids.com" target="_blank" rel="noopener" class="footer-promo">
+                    <img src="../assets/appicon.png" alt="ClassMate">
+                    <span>Invitation powered by Classmate</span>
+                </a>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- Invitation Logic -->
+    <script src="invitation.js?v=1"></script>
+</body>
+</html>
