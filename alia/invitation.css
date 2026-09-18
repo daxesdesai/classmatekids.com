@@ -120,62 +120,93 @@ body {
     66%      { transform: translate(-18px, 26px) scale(0.96); }
 }
 
-/* Squishy emoji floaters */
-.slime-bg .squishy {
+
+
+/* Kawaii slime characters (SVG) that squish and wobble */
+.slime-face {
     position: absolute;
-    user-select: none;
+    display: block;
+    opacity: 0.9;
+    transform-origin: 50% 90%;
+    rotate: var(--rot, 0deg);
+    filter: drop-shadow(0 4px 8px rgba(124, 58, 237, 0.25));
     will-change: transform;
-    filter: drop-shadow(0 2px 6px rgba(124, 58, 237, 0.25));
-    animation: squish-float 9s ease-in-out infinite;
+    animation: slime-squish 6s ease-in-out infinite;
 }
 
+.slime-face svg { width: 100%; height: auto; display: block; overflow: visible; }
 
-.slime-bg .squishy:nth-child(27) { top: 2.6%; left: 3.9%; font-size: 1.58rem; opacity: 0.49; animation-delay: -6.9s; animation-duration: 11s; }
-.slime-bg .squishy:nth-child(28) { top: 1.3%; left: 23.2%; font-size: 1.93rem; opacity: 0.6; animation-delay: -7.1s; animation-duration: 8s; }
-.slime-bg .squishy:nth-child(29) { top: 3.4%; left: 43.3%; font-size: 2.06rem; opacity: 0.51; animation-delay: -4.7s; animation-duration: 9s; }
-.slime-bg .squishy:nth-child(30) { top: 2.8%; left: 61.9%; font-size: 2.13rem; opacity: 0.57; animation-delay: -1.7s; animation-duration: 11s; }
-.slime-bg .squishy:nth-child(31) { top: 4.7%; left: 72.6%; font-size: 2.32rem; opacity: 0.7; animation-delay: -8.6s; animation-duration: 9s; }
-.slime-bg .squishy:nth-child(32) { top: -2.4%; left: 85.5%; font-size: 1.71rem; opacity: 0.53; animation-delay: -4.3s; animation-duration: 11s; }
-.slime-bg .squishy:nth-child(33) { top: 18.7%; left: 6.3%; font-size: 1.95rem; opacity: 0.65; animation-delay: -0.8s; animation-duration: 12s; }
-.slime-bg .squishy:nth-child(34) { top: 13.0%; left: 21.9%; font-size: 2.02rem; opacity: 0.5; animation-delay: -8.0s; animation-duration: 10s; }
-.slime-bg .squishy:nth-child(35) { top: 18.3%; left: 38.0%; font-size: 2.14rem; opacity: 0.69; animation-delay: -3.6s; animation-duration: 10s; }
-.slime-bg .squishy:nth-child(36) { top: 17.9%; left: 51.9%; font-size: 1.31rem; opacity: 0.7; animation-delay: -0.2s; animation-duration: 11s; }
-.slime-bg .squishy:nth-child(37) { top: 19.2%; left: 76.5%; font-size: 1.29rem; opacity: 0.66; animation-delay: -8.8s; animation-duration: 12s; }
-.slime-bg .squishy:nth-child(38) { top: 19.5%; left: 86.0%; font-size: 1.81rem; opacity: 0.46; animation-delay: -7.2s; animation-duration: 12s; }
-.slime-bg .squishy:nth-child(39) { top: 32.2%; left: 6.8%; font-size: 2.31rem; opacity: 0.56; animation-delay: -7.8s; animation-duration: 8s; }
-.slime-bg .squishy:nth-child(40) { top: 27.2%; left: 20.0%; font-size: 1.75rem; opacity: 0.64; animation-delay: -2.9s; animation-duration: 11s; }
-.slime-bg .squishy:nth-child(41) { top: 30.4%; left: 35.8%; font-size: 2.28rem; opacity: 0.54; animation-delay: -4.1s; animation-duration: 11s; }
-.slime-bg .squishy:nth-child(42) { top: 33.5%; left: 56.7%; font-size: 2.18rem; opacity: 0.67; animation-delay: -1.2s; animation-duration: 8s; }
-.slime-bg .squishy:nth-child(43) { top: 31.2%; left: 67.9%; font-size: 1.67rem; opacity: 0.5; animation-delay: -0.0s; animation-duration: 8s; }
-.slime-bg .squishy:nth-child(44) { top: 28.4%; left: 89.5%; font-size: 2.04rem; opacity: 0.59; animation-delay: -2.9s; animation-duration: 11s; }
-.slime-bg .squishy:nth-child(45) { top: 46.2%; left: 6.3%; font-size: 2.11rem; opacity: 0.67; animation-delay: -0.5s; animation-duration: 8s; }
-.slime-bg .squishy:nth-child(46) { top: 44.2%; left: 26.2%; font-size: 1.76rem; opacity: 0.59; animation-delay: -6.8s; animation-duration: 7s; }
-.slime-bg .squishy:nth-child(47) { top: 45.5%; left: 41.1%; font-size: 1.76rem; opacity: 0.58; animation-delay: -6.2s; animation-duration: 10s; }
-.slime-bg .squishy:nth-child(48) { top: 46.1%; left: 59.9%; font-size: 1.76rem; opacity: 0.51; animation-delay: -4.7s; animation-duration: 9s; }
-.slime-bg .squishy:nth-child(49) { top: 49.4%; left: 77.5%; font-size: 1.36rem; opacity: 0.56; animation-delay: -3.7s; animation-duration: 10s; }
-.slime-bg .squishy:nth-child(50) { top: 45.5%; left: 85.1%; font-size: 1.41rem; opacity: 0.47; animation-delay: -6.0s; animation-duration: 7s; }
-.slime-bg .squishy:nth-child(51) { top: 64.2%; left: 2.7%; font-size: 2.03rem; opacity: 0.62; animation-delay: -1.3s; animation-duration: 8s; }
-.slime-bg .squishy:nth-child(52) { top: 64.7%; left: 20.1%; font-size: 2.34rem; opacity: 0.55; animation-delay: -4.4s; animation-duration: 12s; }
-.slime-bg .squishy:nth-child(53) { top: 63.7%; left: 36.1%; font-size: 1.66rem; opacity: 0.58; animation-delay: -3.1s; animation-duration: 8s; }
-.slime-bg .squishy:nth-child(54) { top: 59.9%; left: 52.0%; font-size: 1.58rem; opacity: 0.53; animation-delay: -4.1s; animation-duration: 12s; }
-.slime-bg .squishy:nth-child(55) { top: 57.1%; left: 71.3%; font-size: 1.91rem; opacity: 0.58; animation-delay: -0.6s; animation-duration: 8s; }
-.slime-bg .squishy:nth-child(56) { top: 64.8%; left: 85.5%; font-size: 1.45rem; opacity: 0.46; animation-delay: -7.0s; animation-duration: 9s; }
-.slime-bg .squishy:nth-child(57) { top: 78.0%; left: 10.0%; font-size: 2.2rem; opacity: 0.62; animation-delay: -8.5s; animation-duration: 10s; }
-.slime-bg .squishy:nth-child(58) { top: 73.2%; left: 27.8%; font-size: 1.84rem; opacity: 0.63; animation-delay: -0.8s; animation-duration: 7s; }
-.slime-bg .squishy:nth-child(59) { top: 78.4%; left: 36.4%; font-size: 2.26rem; opacity: 0.52; animation-delay: -0.2s; animation-duration: 7s; }
-.slime-bg .squishy:nth-child(60) { top: 78.4%; left: 51.9%; font-size: 2.21rem; opacity: 0.47; animation-delay: -7.8s; animation-duration: 10s; }
-.slime-bg .squishy:nth-child(61) { top: 72.1%; left: 78.6%; font-size: 1.64rem; opacity: 0.68; animation-delay: -5.6s; animation-duration: 7s; }
-.slime-bg .squishy:nth-child(62) { top: 76.2%; left: 87.0%; font-size: 1.24rem; opacity: 0.49; animation-delay: -0.5s; animation-duration: 8s; }
-.slime-bg .squishy:nth-child(63) { top: 94.5%; left: 7.9%; font-size: 1.79rem; opacity: 0.5; animation-delay: -4.0s; animation-duration: 12s; }
-.slime-bg .squishy:nth-child(64) { top: 88.4%; left: 21.5%; font-size: 1.12rem; opacity: 0.51; animation-delay: -0.1s; animation-duration: 12s; }
-.slime-bg .squishy:nth-child(65) { top: 91.0%; left: 45.1%; font-size: 1.77rem; opacity: 0.51; animation-delay: -4.0s; animation-duration: 12s; }
-.slime-bg .squishy:nth-child(66) { top: 93.6%; left: 55.8%; font-size: 1.74rem; opacity: 0.66; animation-delay: -3.5s; animation-duration: 11s; }
+.slime-face.f1 { top: 11.8%; left: 2.7%; width: 106px; --rot: -9deg; animation-duration: 6.4s; animation-delay: -5.0s; }
+.slime-face.f2 { top: 5.3%; left: 37.4%; width: 83px; --rot: -7deg; animation-duration: 4.8s; animation-delay: -0.4s; }
+.slime-face.f3 { top: 10.1%; left: 62.7%; width: 87px; --rot: -9deg; animation-duration: 6.6s; animation-delay: -4.1s; }
+.slime-face.f4 { top: 11.0%; left: 90.4%; width: 90px; --rot: -9deg; animation-duration: 7.4s; animation-delay: -3.5s; }
+.slime-face.f5 { top: 44.2%; left: 8.4%; width: 88px; --rot: 7deg; animation-duration: 5.2s; animation-delay: -5.3s; }
+.slime-face.f6 { top: 37.0%; left: 27.0%; width: 90px; --rot: 10deg; animation-duration: 6.7s; animation-delay: -0.3s; }
+.slime-face.f7 { top: 38.2%; left: 63.8%; width: 106px; --rot: -5deg; animation-duration: 4.6s; animation-delay: -1.5s; }
+.slime-face.f8 { top: 39.3%; left: 89.1%; width: 105px; --rot: 14deg; animation-duration: 4.9s; animation-delay: -0.9s; }
+.slime-face.f9 { top: 76.0%; left: 1.7%; width: 72px; --rot: 6deg; animation-duration: 6.1s; animation-delay: -4.4s; }
+.slime-face.f10 { top: 68.9%; left: 29.2%; width: 87px; --rot: 11deg; animation-duration: 5.0s; animation-delay: -2.2s; }
+.slime-face.f11 { top: 76.4%; left: 58.3%; width: 94px; --rot: -5deg; animation-duration: 4.9s; animation-delay: -3.5s; }
+.slime-face.f12 { top: 70.1%; left: 86.8%; width: 88px; --rot: 7deg; animation-duration: 4.9s; animation-delay: -4.3s; }
 
-@keyframes squish-float {
-    0%, 100% { transform: translate(0, 0) scale(1, 1) rotate(-4deg); }
-    30%      { transform: translate(12px, -18px) scale(1.12, 0.9) rotate(4deg); }
-    55%      { transform: translate(-8px, 10px) scale(0.92, 1.1) rotate(-6deg); }
-    80%      { transform: translate(16px, 14px) scale(1.06, 0.96) rotate(3deg); }
+@keyframes slime-squish {
+    0%, 100% { transform: translateY(0) scale(1, 1); }
+    30%      { transform: translateY(-10px) scale(0.94, 1.08); }
+    50%      { transform: translateY(0) scale(1.1, 0.9); }
+    70%      { transform: translateY(-4px) scale(0.98, 1.03); }
+}
+
+/* Dripping slime along the top edge of the viewport */
+.slime-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 110px;
+    z-index: 2;
+    pointer-events: none;
+    filter: drop-shadow(0 6px 10px rgba(124, 58, 237, 0.25));
+}
+
+.slime-top .drop {
+    animation: drop-fall 3.2s ease-in infinite;
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.slime-top .drop.d0 { animation-delay: 0s; }
+.slime-top .drop.d1 { animation-delay: -0.4s; animation-duration: 3.8s; }
+.slime-top .drop.d2 { animation-delay: -0.9s; }
+.slime-top .drop.d3 { animation-delay: -1.3s; animation-duration: 4.1s; }
+.slime-top .drop.d4 { animation-delay: -1.8s; }
+.slime-top .drop.d5 { animation-delay: -2.2s; animation-duration: 3.5s; }
+.slime-top .drop.d6 { animation-delay: -2.6s; }
+.slime-top .drop.d7 { animation-delay: -3s; animation-duration: 4.4s; }
+.slime-top .drop.d8 { animation-delay: -0.2s; }
+
+@keyframes drop-fall {
+    0%   { transform: translateY(0) scale(1, 1); opacity: 0; }
+    10%  { opacity: 0.9; transform: translateY(0) scale(0.9, 1.3); }
+    100% { transform: translateY(130px) scale(0.8, 1.2); opacity: 0; }
+}
+
+/* Drops falling from the hero drip divider */
+.hero-drop {
+    position: absolute;
+    bottom: -6px;
+    width: 12px;
+    height: 18px;
+    background: var(--slime-lavender);
+    border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+    z-index: 1;
+    animation: hero-drop-fall 4s ease-in infinite;
+    pointer-events: none;
+}
+
+@keyframes hero-drop-fall {
+    0%   { transform: translateY(0) scaleY(1); opacity: 0; }
+    15%  { opacity: 1; transform: translateY(0) scaleY(1.4); }
+    100% { transform: translateY(160px) scaleY(1.1); opacity: 0; }
 }
 
 /* Ensure all page content sits above the background */
@@ -189,19 +220,22 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
     .slime-bg .blob,
-    .slime-bg .squishy { animation: none; }
+    .slime-face,
+    .slime-top .drop,
+    .hero-drop { animation: none; }
 }
 
 /* Touch devices only (phones/tablets) — desktop is unaffected.
    Continuous transform animations on many position:fixed elements and
    backdrop-filter both cause iOS scroll jank, so drop them here. */
 @media (hover: none) and (pointer: coarse) {
-    .slime-bg .blob,
-    .slime-bg .squishy {
+    .slime-bg .blob {
         animation: none;
         will-change: auto;
         filter: none;
     }
+
+    .slime-face { filter: none; }
 
     .details-card,
     .rsvp-section,
@@ -224,18 +258,15 @@ body {
    ======================================== */
 .hero {
     text-align: center;
-    padding: var(--spacing-xl) var(--spacing-md) 0;
+    padding: calc(var(--spacing-xl) + 40px) var(--spacing-md) 0;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .hero::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
+    inset: 0;
     background: radial-gradient(circle, rgba(196, 181, 253, 0.22) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(167, 243, 208, 0.2) 0%, transparent 40%),
                 radial-gradient(circle at 20% 80%, rgba(249, 168, 212, 0.18) 0%, transparent 40%);
@@ -244,8 +275,8 @@ body {
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 0.6; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.1); }
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
 }
 
 .hero-content {
@@ -1045,7 +1076,28 @@ body {
         height: 46px;
     }
 
+    .slime-top { height: 70px; }
+    .slime-face { opacity: 0.75; }
+
     .stats-grid {
         grid-template-columns: 1fr 1fr;
     }
+}
+
+/* Preview ribbon (shown with ?preview) */
+.preview-ribbon {
+    position: fixed;
+    top: 14px;
+    right: -46px;
+    z-index: 5;
+    background: var(--slime-lavender-dark);
+    color: #fff;
+    font-family: 'Fredoka', 'Quicksand', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+    padding: 0.4rem 3.5rem;
+    transform: rotate(45deg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }

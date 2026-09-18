@@ -52,7 +52,8 @@ function getUrlParams() {
     const params = new URLSearchParams(window.location.search);
     return {
         inviteId: params.get('invite'),
-        adminKey: params.get('admin')
+        adminKey: params.get('admin'),
+        preview: params.has('preview')
     };
 }
 
@@ -297,11 +298,27 @@ function formatTimestamp(timestamp) {
 // ============================================
 
 async function initGuestPage() {
-    const { inviteId } = getUrlParams();
+    const { inviteId, preview } = getUrlParams();
 
     showElement('loading');
     hideElement('invitation-content');
     hideElement('error-container');
+
+    // Design preview: ?preview shows the page with a sample guest, no Firebase reads or writes
+    if (preview) {
+        hideElement('loading');
+        showElement('invitation-content');
+        setElementText('guest-name', 'The Smith Family');
+        populateAdultsDropdown(2);
+        populateKidsDropdown(2);
+        showInvitedCount(2, 2, true);
+        setupRsvpForm('preview', 'The Smith Family');
+        const ribbon = document.createElement('div');
+        ribbon.className = 'preview-ribbon';
+        ribbon.textContent = 'Preview';
+        document.body.appendChild(ribbon);
+        return;
+    }
 
     if (firebaseConfig.apiKey === "YOUR_API_KEY") {
         console.log('Running in demo mode (Firebase not configured)');
@@ -482,6 +499,11 @@ function setupRsvpForm(inviteId, guestName) {
 
             if (selectedOption === 'yes' && numAdults === 0) {
                 alert('Please select how many adults will be attending');
+                return;
+            }
+
+            if (inviteId === 'preview') {
+                alert('This is a design preview. RSVPs are not saved here.');
                 return;
             }
 
